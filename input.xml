@@ -1,0 +1,17 @@
+	<?xml version="1.0" standalone=no>
+	<Problem>
+		<Data path="/home/george/Desktop/data.txt"/>
+		<Network path="/home/george/Documents/"/>
+		<Order>
+			<Node name="george" default="1"/>
+			<Node name="eleni" default="2"/>
+			<Node name="kostas" default="3"/>
+			<Node name="mpampis" default="4"/>
+		</Order>
+		<Solvers>
+			<Item type="GA" maxIter="1000"/>
+			<Item type="PSO" maxIter="1200"/>
+			<Item type="GA+PSO" maxIter="1000"/>
+		</Solvers>
+		<Options merge="no" stats="yes" visualization="yes"/></Options>
+	</Problem>
