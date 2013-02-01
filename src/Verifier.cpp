@@ -32,7 +32,7 @@ Verifier::isAcyclic(Network& graph)
 
 	Network::Vertex v;
 	v = graph.findLeafNode();
-	std::cout << graph.getGraph()[v].name << std::endl;
+	//std::cout << graph.getGraph()[v].name << std::endl;
 	std::cout << "2" << std::endl;
 	if(v)
 	{

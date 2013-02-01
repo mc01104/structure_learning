@@ -12,16 +12,18 @@
 #include <vector>
 #include <map>
 
-class Verifier;
 
 class Network
 {
-	friend class Verifier;
 
 	friend class ostream;
 
 	public:
 		Network();
+
+		Network(Network* net);
+
+		Network(const Network& net);
 
 		virtual ~Network();
 
@@ -30,7 +32,7 @@ class Network
 
 
 	protected:
-		Verifier* verifier;
+
 
 		struct EdgeBundle
 		{
@@ -68,22 +70,44 @@ class Network
 
 		VertexMap vertexMap;
 
+		typedef ::std::pair< ::std::string, ::std::string> EdgePair;
+
+		typedef ::std::vector< EdgePair> EdgeVector;
+
+		EdgeVector edges;
+
 
 	public:
 
 		Vertex findLeafNode();
 
+		std::vector< Vertex> getLeafNodes();
+
 		Vertex addVertex(const std::string& name, const std::vector< Vertex >& parents = std::vector< Vertex>());
 
 		void removeVertex(const Vertex& v);
 
+		void removeVertex(const ::std::string& vertexName);
+
 		Edge addEdge(const Vertex& u, const Vertex& v, const std::string& property = "", const std::string& color = "black");
 
+		Edge addEdge(const ::std::string& u, const ::std::string& v, const ::std::string& property = "", const ::std::string& color = "black");
+
+		Edge addEdge(const Edge& e);
+
+		Edge addEdge(const EdgePair& e);
+
 		void removeEdge(const Edge& e);
+
+		void removeEdge(const EdgePair& e);
+
+		void removeEdge(const Vertex&u, const Vertex& v);
 
 		void reverseEdge(const Edge& e);
 
 		Vertex getVertex(const std::string& name);
+
+		Edge getEdge(const std::string& source, const ::std::string& target);
 
 		Edge getEdge(const Vertex& source, const Vertex& target);
 
@@ -91,15 +115,43 @@ class Network
 
 		::std::size_t getNumVertices() const;
 
-		Graph getGraph() const;
+//		Graph getGraph() const;
 
 		void randomize();
 
-		bool isAcyclic(Network& graph);
+		static bool isAcyclic(Network* graph);
 
 		void printGraph(std::ofstream& outf);
 
-		VertexMap getVertexMap() {return this->vertexMap;};
+		const VertexMap& getVertexMap()  const {return this->vertexMap;};
+
+		const EdgeVector& getEdgeVector()  const {return this->edges;};
+
+		::std::size_t getDegree() const {return this->degree;};
+
+		VertexBundle getVertexProperties(const ::std::string& vertexName);
+
+		EdgeBundle getEdgeProperties(const Edge& e);
+
+		void setEdgeProperties(const Edge& e, const EdgeBundle& props);
+
+		void setVertexProperties(const Vertex& v, const VertexBundle& props);
+
+		const VertexBundle& getVertexProperties(const ::std::string& vertexName) const;
+
+		const EdgeBundle& getEdgeProperties(const Edge& e) const;
+
+		std::vector< ::std::string> getParents(const Vertex& v);
+
+		std::vector< ::std::string> getParents(const ::std::string& vertexName);
+
+
+		bool operator == ( const Network& net);
+
+	protected:
+
+		bool isAcyclic();
+
 
 };
 
