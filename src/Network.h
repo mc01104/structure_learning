@@ -25,6 +25,8 @@ class Network
 
 		Network(const Network& net);
 
+		Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
+
 		virtual ~Network();
 
 		/** Maximum degree per vertex. */
@@ -117,10 +119,6 @@ class Network
 
 //		Graph getGraph() const;
 
-		void randomize();
-
-		static bool isAcyclic(Network* graph);
-
 		void printGraph(std::ofstream& outf);
 
 		const VertexMap& getVertexMap()  const {return this->vertexMap;};
@@ -145,8 +143,22 @@ class Network
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
 
-
 		bool operator == ( const Network& net);
+
+		static bool isAcyclic(Network* graph);
+
+		static void generateRandomNetwork(Network& net,
+											  const ::std::vector< ::std::string>& nodes,
+											  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
+											  const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
+											  const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
+
+		static void randomizeNetwork(Network& net,
+										const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
+										const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
+										const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
+
+		static bool isNetworkConsistent(const Network& net);
 
 	protected:
 

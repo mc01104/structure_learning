@@ -55,6 +55,20 @@ Network::Network(const Network& net)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
 }
 
+Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges)
+{
+	::std::vector< ::std::string>::const_iterator it;
+
+	::std::vector< ::std::pair< ::std::string, ::std::string> >::const_iterator iter;
+
+	for(it = nodes.begin(); it != nodes.end(); ++it)
+		this->addVertex(*it);
+
+	for(iter = edges.begin(); iter != edges.end(); ++iter)
+		this->addEdge(iter->first,iter->second);
+
+}
+
 Network::~Network()
 {
 
@@ -145,13 +159,6 @@ Network::getNumVertices() const
 	return ::boost::num_vertices(this->graph);
 }
 
-void
-Network::randomize()
-{
-	//generate a lower triangular adjacency matrix
-
-	//
-}
 
 bool
 Network::isAcyclic()
