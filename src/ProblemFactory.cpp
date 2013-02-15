@@ -70,7 +70,17 @@ namespace sl
 	        		order.push_back(p->Attribute("name"));
 	    }
 
-		return new Problem(data_path, net_path, order, solvers);
+	    //must also parse the document for required and prohibited edges
+
+	    Problem* tmp = new Problem();
+
+	    tmp->setPathtoData(data_path);
+
+	    tmp->setPathtoGraph(net_path);
+
+	    tmp->setNodeOrdering(order);
+
+		return tmp;
 	}
 
 	void

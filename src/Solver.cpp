@@ -7,15 +7,42 @@
 
 #include "Solver.h"
 
-namespace sl {
+namespace sl
+{
 
-Solver::Solver() {
-	// TODO Auto-generated constructor stub
+	Solver::Solver():
+			problem(),
+			maxIter()
+	{
+	}
 
-}
 
-Solver::~Solver() {
-	// TODO Auto-generated destructor stub
-}
+	Solver::~Solver()
+	{
+	}
+
+	void
+	Solver::initialize(const Problem& problem)
+	{
+		this->problem = problem;
+
+		this->loadData();
+
+		this->loadGraph();
+
+	}
+
+	void
+	Solver::loadData()
+	{
+
+	}
+
+	void
+	Solver::loadGraph()
+	{
+		if(this->problem.getPathToGraph() != "")
+			return;
+	}
 
 } /* namespace sl */

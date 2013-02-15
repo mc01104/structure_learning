@@ -4,12 +4,12 @@
  *  Created on: 21 Jan 2013
  *      Author: george
  */
+
 #include <boost/graph/graphviz.hpp>
 #include <algorithm>
 
+#include "Utilities.h"
 #include "Network.h"
-#include "Verifier.h"
-
 
 Network::Network():
 degree(10),
@@ -439,6 +439,151 @@ Network::operator==(const Network& net)
 }
 
 
+Network*
+Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
+								   const ::std::vector< ::std::string>& nodeOrdering,
+								   const ::std::vector< EdgePair>& requiredEdges,
+								   const ::std::vector< EdgePair>& prohibitedEdges)
+{
+	//generate random network
+	Network* tmp = new Network(nodes,requiredEdges);
+
+	tmp->setNodeOrdering(nodeOrdering);
+
+	tmp->setRequiredEdges(requiredEdges);
+
+	tmp->setProhibitedEdges(prohibitedEdges);
+
+	tmp->addRandomEdges(0.5);
+
+	//remove prohibited edges
+	for( ::std::vector< EdgePair>::const_iterator it = prohibitedEdges.begin(); it != prohibitedEdges.end(); ++it)
+		if(tmp->isEdge(it->first, it->second))
+			tmp->removeEdge(*it);
+
+	//check if graph is acyclic
+	if (Network::isAcyclic(tmp))
+		return tmp;
+
+	delete tmp;
+
+	return Network::generateRandomNetwork(nodes, nodeOrdering, requiredEdges, prohibitedEdges);
+}
+
+::std::vector < ::std::string>
+Network::getVertexList()
+{
+	::std::vector< ::std::string> vertexList;
+
+	for( VertexMap::iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
+		vertexList.push_back(it->first);
+
+	return vertexList;
+}
+
+void
+Network::addRandomEdges(float probability)
+{
+	for( VertexMap::const_iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
+	{
+		::std::vector< ::std::string> parents;
+
+		Network::getPossibleParents(it->first, this->getVertexList(), parents, this->nodeOrdering);
+
+		//generate edge with probability 50%
+		int edgeCounter = this->getDegree() - this->getParents(this->getVertex(it->first)).size();
+
+		for (int i =0; i < edgeCounter; ++i)
+			if( generateRandomFloat(0.0,1.0) <= probability)
+			{
+				int index = generateRandomInt(0,parents.size() - 1);
+
+				if( !this->isEdge(it->first, parents[index]))
+					this->addEdge(it->first,parents[index]);
+			}
+
+	}
+}
+
+void
+Network::removeRandomEdges(float probability)
+{
+	for( EdgeVector::iterator it = this->edges.begin(); it != this->edges.end(); ++it)
+	{
+		if( generateRandomFloat(0,1) <= probability)
+			this->removeEdge(*it);
+	}
+
+}
+
+void
+Network::randomizeNetwork(Network& net)
+{
+	//remove random edges
+	net.removeRandomEdges(0.3);
+
+	//add random edges
+	net.addRandomEdges(0.5);
+
+	while(! Network::isAcyclic(&net))
+		Network::randomizeNetwork(net);
+
+}
 
 
+void
+Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes, ::std::vector< ::std::string>& parents,
+							    ::std::vector< ::std::string>& nodeOrdering)
+{
+	::std::vector< ::std::string> prohibitedParents;
 
+	::std::vector< ::std::string>::iterator index = ::std::find(nodeOrdering.begin(), nodeOrdering.end(), node);
+
+	if(index != nodeOrdering.end())
+		::std::copy(index, nodeOrdering.end(), prohibitedParents.begin());
+
+	parents = const_cast< ::std::vector< ::std::string>& >(nodes) - prohibitedParents;
+}
+
+bool
+Network::isVertex(const ::std::string& vertexName)
+{
+	for(VertexMap::iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
+	{
+		if(it->first == vertexName)
+			return true;
+	}
+
+	return false;
+
+}
+
+bool
+Network::isEdge(const ::std::string& source, const ::std::string& target)
+{
+	for(EdgeVector::iterator it = this->edges.begin(); it != this->edges.end(); ++it)
+	{
+		if(it->first == source && it->second == target)
+			return true;
+	}
+
+	return false;
+}
+
+bool
+Network::isNetworkConsistent(const Network& net)
+{
+	Network* tmp = new Network(net);
+
+	if (!Network::isAcyclic(tmp)) return false;
+
+	//check for required edges
+
+	//check for prohibited edges
+
+	//check node ordering
+
+	delete tmp;
+
+	return true;
+}

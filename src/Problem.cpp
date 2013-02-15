@@ -14,22 +14,11 @@ namespace sl
 	Problem::Problem() :
 			pathToGraph(""),
 			pathToData(""),
-			nodeOrdering(),
-			solvers()
+			nodeOrdering()
 	{
 
 	}
 
-	Problem::Problem(const ::std::string& pathToData,
-					   const ::std::string& pathToGraph,
-					   const ::std::vector< ::std::string>& nodeOrdering,
-					   const ::std::vector< ::std::string>& solvers)
-	{
-		this->pathToData = pathToData;
-		this->pathToGraph = pathToGraph;
-		this->nodeOrdering = nodeOrdering;
-		this->solvers = solvers;
-	}
 
 	Problem::~Problem()
 	{
@@ -47,9 +36,16 @@ namespace sl
 			os << *it << " =>";
 		os << *(problem.nodeOrdering.end() - 1) << ::std::endl;
 
-		os << "Solvers instantiated for the problem : " << ::std::endl;
-		for(::std::vector< ::std::string>::const_iterator it = problem.solvers.begin(); it != problem.solvers.end(); ++it)
-			os << *it << ::std::endl;
+		os << ::std::endl;
+		os << "Required Edges" << ::std::endl;
+		for( Problem::Edges::const_iterator it = problem.requiredEdges.begin(); it != problem.requiredEdges.end(); ++it)
+			os << it->first << " =>" << it->second << ::std::endl;
+
+		os << ::std::endl << ::std::cout << "Prohibited Edges" << ::std::endl;
+
+		for( Problem::Edges::const_iterator it = problem.prohibitedEdges.begin(); it != problem.prohibitedEdges.end(); ++it)
+			os << it->first << " =>" << it->second << ::std::endl;
+
 
 		return os;
 	}

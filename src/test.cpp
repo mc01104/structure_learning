@@ -13,11 +13,12 @@
 #include <tinyxml.h>
 #include <vector>
 #include "ProblemFactory.h"
+#include "SolverFactory.h"
 #include "Problem.h"
 #include "Network.h"
 
 using namespace std;
-bool isAcyclic(Network* graph);
+
 int main(int argc, char* argv[]) {
 
 //	if (argc < 2)
@@ -26,6 +27,10 @@ int main(int argc, char* argv[]) {
 //	sl::ProblemFactory* pFactory = sl::ProblemFactory::getInstance();
 //
 //	sl::Problem* problem = pFactory->create(argv[1]);
+//
+//	sl::SolverFactory* sFactory = sl::SolverFactory::getInstance();
+//
+//	::std::vector< ::sl::Solver*> solvers = sFactory->create(argv[1]);
 //
 //	cout << *problem << endl;
 //
@@ -59,7 +64,7 @@ int main(int argc, char* argv[]) {
 		std::cout << it2->first << std::endl;
 
 	//Add an edge
-	Network::Edge e1 = g->addEdge(g->getVertex("George"),g->getVertex("Spyros"));
+	//Network::Edge e1 = g->addEdge(g->getVertex("George"),g->getVertex("Spyros"));
 
 	std::cout << "An edge was created" << std::endl;
 //
@@ -137,7 +142,7 @@ int main(int argc, char* argv[]) {
 //			cout << g->getGraph()[*it].name << endl;
 
 
-	Network::Vertex v = g->findLeafNode();
+	//Network::Vertex v = g->findLeafNode();
 
 //	if(v)
 //		std::cout <<"Node name :" <<  g->getGraph()[v].name << std::endl;

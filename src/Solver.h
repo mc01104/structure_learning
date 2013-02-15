@@ -8,9 +8,11 @@
 #ifndef SOLVER_H_
 #define SOLVER_H_
 
+#include "Network.h"
+#include "Problem.h"
+
 namespace sl
 {
-	class Problem;
 	class Solution;
 
 	class Solver
@@ -20,7 +22,7 @@ namespace sl
 
 			virtual ~Solver();
 
-			virtual void initialize( const Problem& prob) = 0;
+			virtual void initialize( const Problem& prob);
 
 			virtual void run() = 0;
 
@@ -30,12 +32,18 @@ namespace sl
 
 			int getMaxIter() const {return this->maxIter;};
 
-		private:
-			Problem* problem;
+		protected:
+			Problem problem;
 
 			Solution* solution;
 
 			int maxIter;
+
+			Network* net;
+
+			void loadData();
+
+			void loadGraph();
 	};
 
 } /* namespace sl */

@@ -12,7 +12,6 @@
 #include <vector>
 #include <map>
 
-
 class Network
 {
 
@@ -25,7 +24,8 @@ class Network
 
 		Network(const Network& net);
 
-		Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
+		Network(const ::std::vector< ::std::string>& nodes,
+				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
 
 		virtual ~Network();
 
@@ -78,6 +78,11 @@ class Network
 
 		EdgeVector edges;
 
+		::std::vector< ::std::string> nodeOrdering;
+
+		EdgeVector requiredEdges;
+
+		EdgeVector prohibitedEdges;
 
 	public:
 
@@ -90,6 +95,10 @@ class Network
 		void removeVertex(const Vertex& v);
 
 		void removeVertex(const ::std::string& vertexName);
+
+		bool isVertex(const ::std::string& vertexName);
+
+		bool isEdge(const ::std::string& source, const ::std::string& target);
 
 		Edge addEdge(const Vertex& u, const Vertex& v, const std::string& property = "", const std::string& color = "black");
 
@@ -125,6 +134,8 @@ class Network
 
 		const EdgeVector& getEdgeVector()  const {return this->edges;};
 
+		::std::vector < ::std::string> getVertexList();
+
 		::std::size_t getDegree() const {return this->degree;};
 
 		VertexBundle getVertexProperties(const ::std::string& vertexName);
@@ -143,22 +154,31 @@ class Network
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
 
+		void addRandomEdges( float probability);
+
+		void removeRandomEdges( float probability);
+
+		void setRequiredEdges( const EdgeVector& edges) { this->requiredEdges = edges;};
+
+		void setProhibitedEdges( const EdgeVector& edges) { this->prohibitedEdges = edges;};
+
+		void setNodeOrdering( const ::std::vector< ::std::string>& nodeOrdering) { this->nodeOrdering = nodeOrdering;};
+
 		bool operator == ( const Network& net);
 
 		static bool isAcyclic(Network* graph);
 
-		static void generateRandomNetwork(Network& net,
-											  const ::std::vector< ::std::string>& nodes,
+		static Network* generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 											  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
 											  const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
 											  const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
 
-		static void randomizeNetwork(Network& net,
-										const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
-										const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
-										const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
+		static void randomizeNetwork(Network& net);
 
 		static bool isNetworkConsistent(const Network& net);
+
+		static void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes, ::std::vector< ::std::string>& parents
+										  ,::std::vector< ::std::string>& nodeOrdering);
 
 	protected:
 
