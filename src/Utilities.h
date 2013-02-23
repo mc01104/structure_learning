@@ -21,5 +21,5 @@ int generateRandomInt (const int& min, const int& max);
 
 float generateRandomFloat(const float& min, const float& max);
 
-
+//transpose for vectors
 #endif /* UTILITIES_H_ */
