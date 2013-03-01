@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 typedef ::std::vector< ::std::pair< ::std::string, int> > QueryItem;
 
@@ -39,6 +40,12 @@ namespace data
 
                     Node* getParent();
 
+                    virtual void buildStructure( ::std::map< ::std::string, int*> index) = 0;
+
+                    virtual void insertRecord( const::std::vector< int>& record) = 0;
+
+                    //void destroyStructure(Node* n);
+
             protected:
 
                     ::std::vector< Node*> children;
@@ -55,6 +62,10 @@ namespace data
                     QueryItem query;
 
                     int count;
+
+                    int index;
+
+                    int value;
 
             public:
 
@@ -74,7 +85,22 @@ namespace data
 
                     virtual Node* addNextNode(Node* n);
 
+                    virtual void buildStructure( ::std::map< ::std::string, int*> index);
+
+                    virtual void insertRecord( const ::std::vector< int>& record);
+
                     virtual bool isRoot();
+
+                    void setIndex(int index) {this->index = index;};
+
+                    void setValue(int value) {this->value = value;};
+
+                    int getIndex() {return this->index;};
+
+                    int getValue() {return this->value;};
+
+            private:
+                     void incrementCounter();
     };
 
 
@@ -90,7 +116,12 @@ namespace data
 
                     virtual Node* addNextNode(Node* n);
 
+                    virtual void buildStructure(::std::map< ::std::string, int*> index);
+
+                    virtual void insertRecord( const ::std::vector< int>& record);
+
                     virtual bool isRoot();
+
     };
 
 
@@ -99,6 +130,8 @@ namespace data
             public:
 
                     virtual bool isRoot();
+
+                    virtual void insertRecord( const ::std::vector< int>& record );
     };
 }
 #endif /* NODE_H_ */

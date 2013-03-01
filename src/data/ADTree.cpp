@@ -6,6 +6,7 @@
  */
 
 #include "ADTree.h"
+#include "Dataset.h"
 
 using namespace data;
 
@@ -40,20 +41,27 @@ ADTree::count(const QueryItem& query)
 void
 ADTree::buildStructure()
 {
-
+       this->rootNode->buildStructure(data->index);
 }
 
 
 void
 ADTree::destroyStructure()
 {
-
+      delete rootNode;
 }
 
 
 void
+data::ADTree::insertRecord(std::vector<int> record)
+{
+     this->rootNode->insertRecord(record);
+}
+
+void
 ADTree::computeCounts()
 {
-
+  for(::std::vector< ::std::vector< int> >::iterator it = this->data->dataDiscrete.begin(); it != this->data->dataDiscrete.end(); it++)
+    this->insertRecord(*it);
 }
 

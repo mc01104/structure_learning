@@ -165,7 +165,7 @@ Dataset::count(const QueryItem& query)
 void
 Dataset::computeTransposeData()
 {
-	for(int j = 0; j < nodes.size(); ++j)
+	for(size_t j = 0; j < nodes.size(); ++j)
 	{
 		::std::vector< double> tmp;
 		for(int i = 0; i < this->numberOfRecords; ++i)

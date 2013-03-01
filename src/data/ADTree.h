@@ -25,19 +25,18 @@ namespace data
                       virtual ~ADTree();
 
               private:
-                      ::std::vector<VaryNode> VNodes;
-
-                      ::std::vector<ADNode> ADNodes;
 
                       ADRootNode* rootNode;
 
-                      const Dataset* data;
+                      Dataset* data;
 
               public:
 
                       void initialize(Dataset* data);
 
                       int count(const QueryItem& query);
+
+                      void insertRecord(::std::vector<int> record);
 
               private:
 

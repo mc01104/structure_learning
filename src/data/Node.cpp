@@ -8,6 +8,8 @@
 
 #include "Node.h"
 
+#include <sstream>
+
 using namespace data;
 
 Node::Node() :
@@ -152,10 +154,84 @@ ADRootNode::isRoot()
 	return true;
 }
 
+void
+data::ADNode::buildStructure(std::map< ::std::string, int*> index)
+{
+    ::std::map< ::std::string, int*> tmp = index;
+
+    for(::std::map< ::std::string, int* >::iterator it = tmp.begin(); it != tmp.end(); it++)
+      {
+        Node* n = this->addNextNode(new VaryNode());
+
+        n->setName(it->first);
+
+        n->buildStructure(tmp);
+      }
+}
+
+void
+data::ADNode::insertRecord(const std::vector<int>& record)
+{
+  for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
+    {
+      if(record[this->index] == this->value)
+        this->incrementCounter();
+      (*it)->insertRecord(record);
+    }
+}
+
 bool
 ADNode::isRoot()
 {
   return false;
+}
+
+void
+VaryNode::buildStructure(std::map<std::string, int*> index)
+{
+    ::std::map< ::std::string, int*> tmp = index;
+
+    int arity = index[this->name][1];
+
+    int MCV = index[this->name][2];
+
+    int ADIndex = index[this->getName()][0];
+
+    Node* n;
+
+    for(int i = 0; i < arity; i++)
+      {
+
+        n = this->addNextNode(new ADNode());
+
+        if( arity != MCV)
+          {
+            ::std::stringstream ss;
+
+            ss << i;
+
+            n->setName(ss.str());
+
+            reinterpret_cast< ADNode*>(n)->setValue(i);
+
+            reinterpret_cast< ADNode*>(n)->setIndex(ADIndex);
+
+            tmp.erase(tmp.begin());
+
+            n->buildStructure(tmp);
+          }
+        else
+          {
+            n->setName("NULL");
+          }
+      }
+}
+
+void
+VaryNode::insertRecord(const std::vector<int>& record)
+{
+    for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
+      (*it)->insertRecord(record);
 }
 
 bool
@@ -163,4 +239,23 @@ VaryNode::isRoot()
 {
   return false;
 }
+
+void
+ADRootNode::insertRecord(const std::vector<int>& record)
+{
+  for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
+    (*it)->insertRecord(record);
+}
+
+void
+ADNode::incrementCounter()
+{
+  this->count++;
+}
+
+
+
+
+
+
 
