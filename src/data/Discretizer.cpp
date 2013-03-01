@@ -7,6 +7,8 @@
 
 #include "Discretizer.h"
 
+using namespace data;
+
 Discretizer::Discretizer()
 {
 

@@ -8,6 +8,8 @@
 #include "BasicDiscretizer.h"
 #include "Dataset.h"
 
+using namespace data;
+
 BasicDiscretizer::BasicDiscretizer() :
 	Discretizer()
 {

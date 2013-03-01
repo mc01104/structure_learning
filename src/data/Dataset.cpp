@@ -13,6 +13,7 @@
 #include <set>
 #include <algorithm>
 
+using namespace data;
 
 Dataset::Dataset(const ::std::string& inputFile)
 {
@@ -151,7 +152,7 @@ Dataset::computeMCV(int index_elem, int arity)
 void
 Dataset::buildADTree()
 {
-	this->adtree.initialize(*this);
+	this->adtree.initialize(this);
 }
 
 int
