@@ -8,8 +8,8 @@
 #ifndef SOLVER_H_
 #define SOLVER_H_
 
-#include "Network.h"
-#include "Problem.h"
+#include "../Network.h"
+#include "../Problem.h"
 
 namespace sl
 {

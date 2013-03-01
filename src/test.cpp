@@ -13,7 +13,7 @@
 #include <tinyxml.h>
 #include <vector>
 #include "ProblemFactory.h"
-#include "SolverFactory.h"
+#include "solvers/SolverFactory.h"
 #include "Problem.h"
 #include "Network.h"
 
