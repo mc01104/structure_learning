@@ -9,7 +9,8 @@
 
 ADTree::ADTree()
 {
-
+	this->rootNode = new ADNode();
+	this->rootNode->name = "root";
 }
 
 ADTree::~ADTree()
