@@ -26,7 +26,10 @@ namespace data
 
                       int count(const QueryItem& query);
 
+                      //this has to be private ->who uses it?
                       void computeTransposeData();
+
+                      void printIndexMap();
 
               private:
 
@@ -41,7 +44,8 @@ namespace data
                       void buildADTree();
 
               public:
-
+                      //make private and write getters
+                       //use different data container to avoid unnecessary copies of the data
                       ::std::vector< ::std::vector<double> > data;
 
                       ::std::vector< ::std::vector<double> > dataTransposed;
@@ -54,7 +58,7 @@ namespace data
 
                       ::std::map< ::std::string, int*> index;
 
-              private:
+              public:
 
                       int numberOfRecords;
 
@@ -65,5 +69,7 @@ namespace data
                       Discretizer* discretizer;
       };
 }
+
+void test_dataset(const ::std::string& filename);
 
 #endif /* DATASET_H_ */

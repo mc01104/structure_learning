@@ -178,6 +178,8 @@ data::ADNode::insertRecord(const std::vector<int>& record)
         this->incrementCounter();
       (*it)->insertRecord(record);
     }
+
+  //return;
 }
 
 bool
@@ -232,6 +234,8 @@ VaryNode::insertRecord(const std::vector<int>& record)
 {
     for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
       (*it)->insertRecord(record);
+
+    //return;
 }
 
 bool
@@ -245,6 +249,8 @@ ADRootNode::insertRecord(const std::vector<int>& record)
 {
   for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
     (*it)->insertRecord(record);
+
+  //return;
 }
 
 void

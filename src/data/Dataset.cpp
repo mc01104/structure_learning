@@ -13,27 +13,35 @@
 #include <set>
 #include <algorithm>
 
+#include "BasicDiscretizer.h"
+
 using namespace data;
 
-Dataset::Dataset(const ::std::string& inputFile)
+Dataset::Dataset(const ::std::string& inputFile) :
+    discretizer()
 {
 	this->inputFile = inputFile;
 
 	this->loadData();
 
-	this->discretizer->run(*this);
-
 	this->computeTransposeData();
+
+	this->discretizer = new BasicDiscretizer();
+
+	this->discretizer->run(*this);
 
 	this->buildIndexMap();
 
-	this->buildADTree();
+	//this->buildADTree();
 
 }
 
 Dataset::~Dataset()
 {
+        delete discretizer;
 
+        for(::std::map< ::std::string, int* >::iterator it = index.begin(); it != index.end(); it++)
+            delete[] it->second;
 }
 
 
@@ -88,9 +96,10 @@ Dataset::loadData()
 			this->numberOfRecords++;
 		}
 	}
+
 }
 
-
+//FIXED
 void
 Dataset::buildIndexMap()
 {
@@ -102,7 +111,7 @@ Dataset::buildIndexMap()
 
 	for(::std::vector< ::std::string>::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it)
 	{
-		int props[3];
+		int* props = new int[3];
 
 		arity = this->computeArity(index_elem);
 
@@ -123,30 +132,33 @@ Dataset::computeArity(int indCol)
 	for(int i = 0; i < this->numberOfRecords; ++i)
 	{
 		int value = dataDiscrete[i][indCol];
+
 		tmp.insert(value);
 	}
 	return tmp.size();
 }
 
 
+//this is not going to work - FIX! ---> FIXED
 int
 Dataset::computeMCV(int index_elem, int arity)
 {
-	int currentMCV = 0;
+	::std::vector< int> tmp = this->dataTransposedDiscrete[index_elem];
 
-	::std::vector< int> tmp;
+	::std::vector< int> counterVector;
 
-	for(int i = 0; i < this->numberOfRecords; ++i)
-		tmp.push_back(data[i][index_elem]);
+	for(int i = 0; i < 9; ++i)
+		counterVector.push_back(::std::count(tmp.begin(),tmp.end(),i));
 
-	for(int i = 0; i < arity; ++i)
-	{
-		int counter = ::std::count(tmp.begin(),tmp.end(),i);
+	return ::std::distance(counterVector.begin(),::std::max_element(counterVector.begin(),counterVector.end()));
+}
 
-		currentMCV = ( counter > currentMCV ? counter : currentMCV);
-	}
+void
+data::Dataset::printIndexMap()
+{
+        for(::std::map< ::std::string, int*>::iterator it = this->index.begin(); it != this->index.end(); ++it)
+            ::std::cout << "name:" << it->first << "   index:" << it->second[0] << "   arity:" << it->second[1] << "   MCV:" << it->second[2] << ::std::endl;
 
-	return currentMCV;
 }
 
 void
@@ -161,7 +173,7 @@ Dataset::count(const QueryItem& query)
 	return this->adtree.count(query);
 }
 
-
+//write a general purpose transpose function
 void
 Dataset::computeTransposeData()
 {
@@ -174,4 +186,25 @@ Dataset::computeTransposeData()
 		}
 		dataTransposed.push_back(tmp);
 	}
+}
+
+void test_dataset(const ::std::string& filename)
+{
+  ::std::cout << "test_dataset" << ::std::endl;
+
+  Dataset data(filename);
+
+  ::std::cout << data.data[1][1] << ::std::endl;
+  ::std::cout << data.data[3][1] << ::std::endl;
+  ::std::cout << data.data[3][2] << ::std::endl;
+
+//  ::std::cout << "...and now the transposed" << ::std::endl;
+//  ::std::cout << data.dataTransposed[1][1] << ::std::endl;
+//   ::std::cout << data.dataTransposed[1][3] << ::std::endl;
+//   ::std::cout << data.dataTransposed[2][3] << ::std::endl;
+
+  for(::std::vector< ::std::string>::iterator it = data.nodes.begin(); it != data.nodes.end(); ++it)
+    ::std::cout << *it << ::std::endl;
+
+  data.printIndexMap();
 }
