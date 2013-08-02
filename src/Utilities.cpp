@@ -41,7 +41,7 @@ int
 generateRandomInt (const int& min, const int& max)
 {
 
-	srand(::std::time(0));
+	//srand(::std::time(0));
 	return min + rand() % (max - min);
 }
 

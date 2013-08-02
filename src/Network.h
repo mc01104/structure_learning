@@ -109,9 +109,9 @@ class Network
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
 
-		void addRandomEdges( float probability, int numOfIterations = 1000);
+		void addRandomEdge( float probability);
 
-		void removeRandomEdges( float probability);
+		void removeRandomEdge( float probability);
 
 		void setRequiredEdges( const EdgeVector& edges) { this->requiredEdges = edges;};
 
@@ -136,7 +136,9 @@ class Network
 
 	protected:
 
+		bool isEdgeRequired(const EdgePair& edge);
 
+		bool isEdgeProhibited(const EdgePair& edge);
 
 		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
 								   const NodeOrdering& nodeOrdering,
