@@ -59,7 +59,7 @@ class Network
 
 		Edge addEdge(const Edge& e);
 
-		//Edge addEdge(const EdgePair& e);
+		Edge addEdge(const EdgePair& e);
 
 		void removeEdge(const Edge& e);
 
@@ -121,31 +121,30 @@ class Network
 
 		bool operator == ( const Network& net);
 
-
-		bool isAcyclic();
-
 		void randomizeNetwork();
 
 		bool isNetworkConsistent();
 
 
 		//static methods for networks
+		static bool isAcyclic(Network* graph);
 
 		static Network  generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 												  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
 											      const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
 											      const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
 
-
+		Vertex findLeafNode();
 
 	protected:
 
-		Vertex findLeafNode();
+
 
 		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
 
+		bool isAcyclic();
 
 	protected:
 

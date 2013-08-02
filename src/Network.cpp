@@ -55,6 +55,7 @@ Network::Network(const Network& net)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
 }
 
+
 Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges)
 {
 	::std::vector< ::std::string>::const_iterator it;
@@ -65,7 +66,7 @@ Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector
 		this->addVertex(*it);
 
 	for(iter = edges.begin(); iter != edges.end(); ++iter)
-		this->addEdge(iter->first,iter->second);
+		this->addEdge(*iter);
 
 }
 
@@ -137,15 +138,15 @@ Network::addEdge(const Edge& e)
 	return this->addEdge(v1,v2,property,color);
 }
 
-//Edge
-//Network::addEdge(const EdgePair& e)
-//{
-//	Vertex v1 = this->vertexMap[e.first];
-//
-//	Vertex v2 = this->vertexMap[e.second];
-//
-//	return this->addEdge(v1,v2);
-//}
+Edge
+Network::addEdge(const EdgePair& e)
+{
+	Vertex v1 = this->vertexMap[e.first];
+
+	Vertex v2 = this->vertexMap[e.second];
+
+	return this->addEdge(v1,v2);
+}
 
 ::std::size_t
 Network::getNumEdges() const
@@ -161,29 +162,45 @@ Network::getNumVertices() const
 
 
 bool
-Network::isAcyclic()
+Network::isAcyclic(Network* graph)
 {
 
-	Network tmp(this);
+	Network* tmp = new Network(graph);
 
-	size_t numOfVertices = tmp.getNumVertices();
+	return tmp->isAcyclic();
+
+}
+
+bool
+Network::isAcyclic()
+{
+	size_t numOfVertices = this->getNumVertices();
 
 	if( numOfVertices == 0)
 	{
 		return true;
 	}
 
-	if ( tmp.getLeafNodes().size() == 0)
+	if ( this->getLeafNodes().size() == 0)
 		return false;
 
 	Vertex v;
 
-	v = tmp.findLeafNode();
+	v = this->findLeafNode();
+
+	if (v)
+	{
+		::std::cout << this->getGraph()[v].name << ::std::endl;
+	}
+	else
+	{
+		::std::cout << "no leaf node found" << ::std::endl;
+	}
 
 	if(v)
 	{
-		tmp.removeVertex(v);
-		return tmp.isAcyclic();
+		this->removeVertex(v);
+		return this->isAcyclic();
 	}
 
 	return false;
@@ -211,14 +228,17 @@ Network::removeEdge(const Edge& e)
 		}
 
 
-	std::vector<Vertex>::iterator start = target.parents.begin();
+	std::vector<Vertex>::iterator start = this->graph[::boost::target(e, this->graph)].parents.begin();
 
-	std::vector<Vertex>::iterator end = target.parents.end();
+	std::vector<Vertex>::iterator end = this->graph[::boost::target(e, this->graph)].parents.end();
 
-	for(std::vector<Vertex>::iterator it = start; it != end; ++it)
+	for(std::vector<Vertex>::iterator it = start; it != end; it++)
+	{
 		if(*it == ::boost::source(e, this->graph))
-			target.parents.erase(it);
-
+		{
+			this->graph[::boost::target(e, this->graph)].parents.erase(it);
+		}
+	}
 	::boost::remove_edge(e, this->graph);
 }
 
@@ -226,6 +246,7 @@ void
 Network::removeEdge(const Vertex&u, const Vertex& v)
 {
 	Edge tmp = this->getEdge(u,v);
+
 	this->removeEdge(tmp);
 }
 
@@ -293,7 +314,8 @@ Network::getVertex(const std::string& name)
 Edge
 Network::getEdge(const Vertex& source, const Vertex& target)
 {
-	return ::boost::edge(source, target, this->graph).first;
+	return ::boost::edge(source, target, this->getGraph()).first;
+
 }
 
 Edge
@@ -326,7 +348,7 @@ Network::findLeafNode()
 	VertexMap::iterator it;
 
 	for(it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
-		if(::boost::out_degree(it->second, this->getGraph()) )
+		if(::boost::out_degree(it->second, this->getGraph()) == 0 )
 			return it->second;
 
 	return NULL;
