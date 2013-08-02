@@ -74,7 +74,7 @@ Network::~Network()
 
 }
 
-Network::Vertex
+Vertex
 Network::addVertex(const std::string& name, const std::vector< Vertex>& parents)
 {
 	Vertex v = ::boost::add_vertex(this->graph);
@@ -90,7 +90,7 @@ Network::addVertex(const std::string& name, const std::vector< Vertex>& parents)
 	return v;
 }
 
-Network::Edge
+Edge
 Network::addEdge(const Vertex& u, const Vertex& v, const std::string& property, const std::string& color)
 {
 	Edge e = ::boost::add_edge(u,v,this->graph).first;
@@ -112,7 +112,7 @@ Network::addEdge(const Vertex& u, const Vertex& v, const std::string& property, 
 	return e;
 }
 
-Network::Edge
+Edge
 Network::addEdge(const ::std::string& u, const ::std::string& v, const ::std::string& property, const ::std::string& color)
 {
 	Vertex v1 = this->vertexMap[u];
@@ -123,7 +123,7 @@ Network::addEdge(const ::std::string& u, const ::std::string& v, const ::std::st
 
 }
 
-Network::Edge
+Edge
 Network::addEdge(const Edge& e)
 {
 	Vertex v1 = ::boost::source(e, this->graph);
@@ -137,15 +137,15 @@ Network::addEdge(const Edge& e)
 	return this->addEdge(v1,v2,property,color);
 }
 
-Network::Edge
-Network::addEdge(const EdgePair& e)
-{
-	Vertex v1 = this->vertexMap[e.first];
-
-	Vertex v2 = this->vertexMap[e.second];
-
-	return this->addEdge(v1,v2);
-}
+//Edge
+//Network::addEdge(const EdgePair& e)
+//{
+//	Vertex v1 = this->vertexMap[e.first];
+//
+//	Vertex v2 = this->vertexMap[e.second];
+//
+//	return this->addEdge(v1,v2);
+//}
 
 ::std::size_t
 Network::getNumEdges() const
@@ -163,38 +163,32 @@ Network::getNumVertices() const
 bool
 Network::isAcyclic()
 {
-	size_t numOfVertices = this->getNumVertices();
+
+	Network tmp(this);
+
+	size_t numOfVertices = tmp.getNumVertices();
 
 	if( numOfVertices == 0)
 	{
 		return true;
 	}
 
-	if ( this->getLeafNodes().size() == 0)
+	if ( tmp.getLeafNodes().size() == 0)
 		return false;
 
-	Network::Vertex v;
+	Vertex v;
 
-	v = this->findLeafNode();
+	v = tmp.findLeafNode();
 
 	if(v)
 	{
-		this->removeVertex(v);
-		return this->isAcyclic();
+		tmp.removeVertex(v);
+		return tmp.isAcyclic();
 	}
 
 	return false;
 
 }
-
-bool
-Network::isAcyclic(Network* graph)
-{
-	Network tmp(graph);
-
-	return tmp.isAcyclic();
-}
-
 
 void
 Network::removeEdge(const Edge& e)
@@ -290,19 +284,19 @@ Network::reverseEdge(const Edge& e)
 	this->addEdge(n2,n1,property,color);
 }
 
-Network::Vertex
+Vertex
 Network::getVertex(const std::string& name)
 {
 	return vertexMap[name];
 }
 
-Network::Edge
+Edge
 Network::getEdge(const Vertex& source, const Vertex& target)
 {
 	return ::boost::edge(source, target, this->graph).first;
 }
 
-Network::Edge
+Edge
 Network::getEdge(const ::std::string& source, const ::std::string& target)
 {
 	Vertex v1 = this->vertexMap[source];
@@ -326,20 +320,20 @@ Network::printGraph(std::ofstream& outf)
 
 }
 
-Network::Vertex
+Vertex
 Network::findLeafNode()
 {
 	VertexMap::iterator it;
 
 	for(it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
-		if(::boost::out_degree(it->second, this->graph) == 0)
+		if(::boost::out_degree(it->second, this->getGraph()) )
 			return it->second;
 
 	return NULL;
 }
 
 
-std::vector< Network::Vertex>
+std::vector< Vertex>
 Network::getLeafNodes()
 {
 	std::map< std::string, Vertex>::iterator it;
@@ -354,13 +348,13 @@ Network::getLeafNodes()
 }
 
 
-Network::VertexBundle
+VertexBundle
 Network::getVertexProperties(const ::std::string& vertexName)
 {
 	return this->graph[this->vertexMap[vertexName]];
 }
 
-Network::EdgeBundle
+EdgeBundle
 Network::getEdgeProperties(const Edge& e)
 {
 	return this->graph[e];
@@ -378,13 +372,13 @@ Network::setVertexProperties(const Vertex& v, const VertexBundle& props)
 	this->graph[v] = props;
 }
 
-const Network::VertexBundle&
+const VertexBundle&
 Network::getVertexProperties(const ::std::string& vertexName) const
 {
 	return this->graph[this->vertexMap.at(vertexName)];
 }
 
-const Network::EdgeBundle&
+const EdgeBundle&
 Network::getEdgeProperties(const Edge& e) const
 {
 	return this->graph[e];
@@ -439,7 +433,7 @@ Network::operator==(const Network& net)
 }
 
 
-Network*
+Network
 Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 								   const ::std::vector< ::std::string>& nodeOrdering,
 								   const ::std::vector< EdgePair>& requiredEdges,
@@ -462,8 +456,8 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 			tmp->removeEdge(*it);
 
 	//check if graph is acyclic
-	if (Network::isAcyclic(tmp))
-		return tmp;
+	if (tmp->isAcyclic())
+		return *tmp;
 
 	delete tmp;
 
@@ -488,12 +482,13 @@ Network::addRandomEdges(float probability)
 	{
 		::std::vector< ::std::string> parents;
 
-		Network::getPossibleParents(it->first, this->getVertexList(), parents, this->nodeOrdering);
+		this->getPossibleParents(it->first, this->getVertexList(), this->nodeOrdering, parents);
 
 		//generate edge with probability 50%
 		int edgeCounter = this->getDegree() - this->getParents(this->getVertex(it->first)).size();
 
 		for (int i =0; i < edgeCounter; ++i)
+		{
 			if( generateRandomFloat(0.0,1.0) <= probability)
 			{
 				int index = generateRandomInt(0,parents.size() - 1);
@@ -501,7 +496,7 @@ Network::addRandomEdges(float probability)
 				if( !this->isEdge(it->first, parents[index]))
 					this->addEdge(it->first,parents[index]);
 			}
-
+		}
 	}
 }
 
@@ -509,35 +504,34 @@ void
 Network::removeRandomEdges(float probability)
 {
 	for( EdgeVector::iterator it = this->edges.begin(); it != this->edges.end(); ++it)
-	{
 		if( generateRandomFloat(0,1) <= probability)
 			this->removeEdge(*it);
-	}
 
 }
 
 void
-Network::randomizeNetwork(Network& net)
+Network::randomizeNetwork()
 {
 	//remove random edges
-	net.removeRandomEdges(0.3);
+	this->removeRandomEdges(0.4);
 
 	//add random edges
-	net.addRandomEdges(0.5);
+	this->addRandomEdges(0.1);
 
-	while(! Network::isAcyclic(&net))
-		Network::randomizeNetwork(net);
+	while(!this->isAcyclic())
+		this->randomizeNetwork();
 
 }
 
 
 void
-Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes, ::std::vector< ::std::string>& parents,
-							    ::std::vector< ::std::string>& nodeOrdering)
+Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
+							    const NodeOrdering& nodeOrdering,
+							    ::std::vector< ::std::string>& parents)
 {
 	::std::vector< ::std::string> prohibitedParents;
 
-	::std::vector< ::std::string>::iterator index = ::std::find(nodeOrdering.begin(), nodeOrdering.end(), node);
+	NodeOrdering::const_iterator index = ::std::find(nodeOrdering.begin(), nodeOrdering.end(), node);
 
 	if(index != nodeOrdering.end())
 		::std::copy(index, nodeOrdering.end(), prohibitedParents.begin());
@@ -571,19 +565,15 @@ Network::isEdge(const ::std::string& source, const ::std::string& target)
 }
 
 bool
-Network::isNetworkConsistent(const Network& net)
+Network::isNetworkConsistent()
 {
-	Network* tmp = new Network(net);
-
-	if (!Network::isAcyclic(tmp)) return false;
+	if (!this-isAcyclic()) return false;
 
 	//check for required edges
 
 	//check for prohibited edges
 
 	//check node ordering
-
-	delete tmp;
 
 	return true;
 }

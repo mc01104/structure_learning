@@ -8,9 +8,7 @@
 #ifndef NETWORK_H_
 #define NETWORK_H_
 
-#include <boost/graph/adjacency_list.hpp>
-#include <vector>
-#include <map>
+#include "NetworkDefs.h"
 
 class Network
 {
@@ -27,69 +25,21 @@ class Network
 		Network(const ::std::vector< ::std::string>& nodes,
 				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
 
+
+		//add network constructor when using edges and vertices
+		//Network()
+
 		virtual ~Network();
 
 		/** Maximum degree per vertex. */
 		::std::size_t degree;
 
 
-	protected:
 
-
-		struct EdgeBundle
-		{
-			int id;
-			std::string property;
-			std::string color;
-		};
-
-	public:
-		typedef boost::adjacency_list_traits< boost::listS, boost::listS,
-											   boost::directedS, boost::listS >::vertex_descriptor Vertex;
-
-
-		struct VertexBundle
-		{
-			int id;
-			int rank;
-			std::string name;
-			std::vector< Vertex > parents;
-		};
-
-	public:
-		typedef boost::adjacency_list< boost::listS, boost::listS, boost::directedS, VertexBundle, EdgeBundle, boost::no_property> Graph;
-
-
-		typedef boost::graph_traits< Graph>::edge_descriptor Edge;
-
-		typedef boost::graph_traits< Graph>::vertex_iterator VertexIter;
-
-		typedef std::pair< VertexIter, VertexIter> VertexIterPair;
-
-		Graph graph;
-
-		typedef ::std::map< ::std::string, Vertex > VertexMap;
-
-		VertexMap vertexMap;
-
-		typedef ::std::pair< ::std::string, ::std::string> EdgePair;
-
-		typedef ::std::vector< EdgePair> EdgeVector;
-
-		EdgeVector edges;
-
-		::std::vector< ::std::string> nodeOrdering;
-
-		EdgeVector requiredEdges;
-
-		EdgeVector prohibitedEdges;
 
 	public:
 
-		Vertex findLeafNode();
-
-		std::vector< Vertex> getLeafNodes();
-
+		//Vertex Manipulation
 		Vertex addVertex(const std::string& name, const std::vector< Vertex >& parents = std::vector< Vertex>());
 
 		void removeVertex(const Vertex& v);
@@ -98,6 +48,9 @@ class Network
 
 		bool isVertex(const ::std::string& vertexName);
 
+		Vertex getVertex(const std::string& name);
+
+		//Edge Manipulation
 		bool isEdge(const ::std::string& source, const ::std::string& target);
 
 		Edge addEdge(const Vertex& u, const Vertex& v, const std::string& property = "", const std::string& color = "black");
@@ -106,7 +59,7 @@ class Network
 
 		Edge addEdge(const Edge& e);
 
-		Edge addEdge(const EdgePair& e);
+		//Edge addEdge(const EdgePair& e);
 
 		void removeEdge(const Edge& e);
 
@@ -116,23 +69,25 @@ class Network
 
 		void reverseEdge(const Edge& e);
 
-		Vertex getVertex(const std::string& name);
-
 		Edge getEdge(const std::string& source, const ::std::string& target);
 
 		Edge getEdge(const Vertex& source, const Vertex& target);
+
+		//graph interface
 
 		::std::size_t getNumEdges() const;
 
 		::std::size_t getNumVertices() const;
 
-//		Graph getGraph() const;
+		std::vector< Vertex> getLeafNodes();
+
+		Graph& getGraph() {return this->graph;};
 
 		void printGraph(std::ofstream& outf);
 
-		const VertexMap& getVertexMap()  const {return this->vertexMap;};
+		VertexMap getVertexMap()  const {return this->vertexMap;};
 
-		const EdgeVector& getEdgeVector()  const {return this->edges;};
+		EdgeVector getEdgeVector()  const {return this->edges;};
 
 		::std::vector < ::std::string> getVertexList();
 
@@ -166,24 +121,45 @@ class Network
 
 		bool operator == ( const Network& net);
 
-		static bool isAcyclic(Network* graph);
-
-		static Network* generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
-											  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
-											  const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
-											  const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
-
-		static void randomizeNetwork(Network& net);
-
-		static bool isNetworkConsistent(const Network& net);
-
-		static void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes, ::std::vector< ::std::string>& parents
-										  ,::std::vector< ::std::string>& nodeOrdering);
-
-	protected:
 
 		bool isAcyclic();
 
+		void randomizeNetwork();
+
+		bool isNetworkConsistent();
+
+
+		//static methods for networks
+
+		static Network  generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
+												  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
+											      const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
+											      const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
+
+
+
+	protected:
+
+		Vertex findLeafNode();
+
+		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
+								   const NodeOrdering& nodeOrdering,
+								   ::std::vector< ::std::string>& parents);
+
+
+	protected:
+
+		Graph graph;
+
+		VertexMap vertexMap;
+
+		EdgeVector edges;
+
+		NodeOrdering nodeOrdering;
+
+		EdgeVector requiredEdges;
+
+		EdgeVector prohibitedEdges;
 
 };
 

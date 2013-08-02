@@ -1,0 +1,4 @@
+-Debug the implementation of the ADTree
+-Test that the dataset class works as designed
+-Add data on-line
+-Implement more sophisticated Discretizers
