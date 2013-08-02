@@ -563,6 +563,26 @@ Network::isEdgeProhibited(const EdgePair& edge)
 	return true;
 }
 
+bool
+Network::checkForRequiredEdges()
+{
+	for(EdgeVector::iterator it = this->requiredEdges.begin(); it != this->requiredEdges.end(); ++it)
+		if(::std::find(this->edges.begin(), this->edges.end(), *it) == this->edges.end())
+			return false;
+
+	return true;
+}
+
+bool
+Network::checkForProhibitedEdges()
+{
+	for(EdgeVector::iterator it = prohibitedEdges.begin(); it != prohibitedEdges.end(); ++it)
+		if(::std::find(this->edges.begin(), this->edges.end(), *it) == this->edges.end())
+			return false;
+
+	return true;
+}
+
 void
 Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
 							    const NodeOrdering& nodeOrdering,
@@ -610,11 +630,11 @@ Network::isNetworkConsistent()
 {
 	if (!this-isAcyclic()) return false;
 
-	//check for required edges
+	this->checkForRequiredEdges();
 
-	//check for prohibited edges
+	this->checkForProhibitedEdges();
 
-	//check node ordering
+	//this->checkForNodeOrdering();
 
 	return true;
 }

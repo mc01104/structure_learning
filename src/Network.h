@@ -134,6 +134,11 @@ class Network
 
 		Vertex findLeafNode();
 
+		bool checkForRequiredEdges();
+
+		bool checkForProhibitedEdges();
+
+
 	protected:
 
 		bool isEdgeRequired(const EdgePair& edge);
