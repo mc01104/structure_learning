@@ -46,17 +46,20 @@ bool test_graph()
         g->addEdge(g->getVertex("George"),g->getVertex("Mpampis"));
         g->addEdge(g->getVertex("Mpampis"),g->getVertex("Spyros"));
 
-        if (Network::isAcyclic(g))
-                cout << "graph is acyclic" << endl;
-        else
-                cout << "graph is cyclic" << endl;
+
+        if (g->isAcyclic())
+                 cout << "graph is acyclic" << endl;
+         else
+                 cout << "graph is cyclic" << endl;
 
         g->addEdge("Spyros","George");
 
-        if (Network::isAcyclic(g))
+
+        if (g->isAcyclic())
                 cout << "graph is acyclic" << endl;
         else
                 cout << "graph is cyclic" << endl;
+
 
 
         return true;

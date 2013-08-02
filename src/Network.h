@@ -125,9 +125,7 @@ class Network
 
 		bool isNetworkConsistent();
 
-
-		//static methods for networks
-		static bool isAcyclic(Network* graph);
+		bool isAcyclic();
 
 		static Network  generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 												  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
@@ -144,7 +142,7 @@ class Network
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
 
-		bool isAcyclic();
+
 
 	protected:
 

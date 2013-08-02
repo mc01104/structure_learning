@@ -162,47 +162,31 @@ Network::getNumVertices() const
 
 
 bool
-Network::isAcyclic(Network* graph)
-{
-
-	Network* tmp = new Network(graph);
-
-	return tmp->isAcyclic();
-
-}
-
-bool
 Network::isAcyclic()
 {
-	size_t numOfVertices = this->getNumVertices();
+	Network* tmp = new Network(this);
+
+	size_t numOfVertices = tmp->getNumVertices();
 
 	if( numOfVertices == 0)
 	{
 		return true;
 	}
 
-	if ( this->getLeafNodes().size() == 0)
+	if ( tmp->getLeafNodes().size() == 0)
 		return false;
 
 	Vertex v;
 
-	v = this->findLeafNode();
-
-	if (v)
-	{
-		::std::cout << this->getGraph()[v].name << ::std::endl;
-	}
-	else
-	{
-		::std::cout << "no leaf node found" << ::std::endl;
-	}
+	v = tmp->findLeafNode();
 
 	if(v)
 	{
-		this->removeVertex(v);
-		return this->isAcyclic();
+		tmp->removeVertex(v);
+		return tmp->isAcyclic();
 	}
 
+	delete tmp;
 	return false;
 
 }
