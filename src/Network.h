@@ -25,21 +25,8 @@ class Network
 		Network(const ::std::vector< ::std::string>& nodes,
 				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
 
-
-		//add network constructor when using edges and vertices
-		//Network()
-
 		virtual ~Network();
 
-		/** Maximum degree per vertex. */
-		int degree;
-
-
-
-
-	public:
-
-		//Vertex Manipulation
 		Vertex addVertex(const std::string& name, const std::vector< Vertex >& parents = std::vector< Vertex>());
 
 		void removeVertex(const Vertex& v);
@@ -50,7 +37,6 @@ class Network
 
 		Vertex getVertex(const std::string& name);
 
-		//Edge Manipulation
 		bool isEdge(const ::std::string& source, const ::std::string& target);
 
 		Edge addEdge(const Vertex& u, const Vertex& v, const std::string& property = "", const std::string& color = "black");
@@ -93,9 +79,9 @@ class Network
 
 		int getDegree() const {return this->degree;};
 
-		VertexBundle getVertexProperties(const ::std::string& vertexName);
+		//VertexBundle getVertexProperties(const ::std::string& vertexName);
 
-		EdgeBundle getEdgeProperties(const Edge& e);
+		//EdgeBundle getEdgeProperties(const Edge& e);
 
 		void setEdgeProperties(const Edge& e, const EdgeBundle& props);
 
@@ -108,10 +94,6 @@ class Network
 		std::vector< ::std::string> getParents(const Vertex& v);
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
-
-		void addRandomEdge( float probability);
-
-		void removeRandomEdge( float probability);
 
 		void setRequiredEdges( const EdgeVector& edges) { this->requiredEdges = edges;};
 
@@ -132,11 +114,8 @@ class Network
 											      const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
 											      const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
 
-		Vertex findLeafNode();
 
-		bool checkForRequiredEdges();
 
-		bool checkForProhibitedEdges();
 
 
 	protected:
@@ -149,9 +128,20 @@ class Network
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
 
+		bool checkForRequiredEdges();
+
+		bool checkForProhibitedEdges();
+
+		Vertex findLeafNode();
+
+		void addRandomEdge( float probability);
+
+		void removeRandomEdge( float probability);
 
 
 	protected:
+
+		int degree;
 
 		Graph graph;
 
