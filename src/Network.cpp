@@ -15,6 +15,7 @@ Network::Network():
 degree(10),
 graph()
 {
+
 }
 
 Network::Network(Network* net)
@@ -56,7 +57,8 @@ Network::Network(const Network& net)
 }
 
 
-Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges)
+Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges):
+		degree(10)
 {
 	::std::vector< ::std::string>::const_iterator it;
 
@@ -454,7 +456,7 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 
 	tmp->setProhibitedEdges(prohibitedEdges);
 
-	tmp->addRandomEdges(0.5);
+	tmp->addRandomEdges(0.4);
 
 	//remove prohibited edges
 	for( ::std::vector< EdgePair>::const_iterator it = prohibitedEdges.begin(); it != prohibitedEdges.end(); ++it)
@@ -482,28 +484,32 @@ Network::getVertexList()
 }
 
 void
-Network::addRandomEdges(float probability)
+Network::addRandomEdges(float probability, int numOfIterations)
 {
-	for( VertexMap::const_iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
-	{
-		::std::vector< ::std::string> parents;
-
-		this->getPossibleParents(it->first, this->getVertexList(), this->nodeOrdering, parents);
-
-		//generate edge with probability 50%
-		int edgeCounter = this->getDegree() - this->getParents(this->getVertex(it->first)).size();
-
-		for (int i =0; i < edgeCounter; ++i)
-		{
-			if( generateRandomFloat(0.0,1.0) <= probability)
-			{
-				int index = generateRandomInt(0,parents.size() - 1);
-
-				if( !this->isEdge(it->first, parents[index]))
-					this->addEdge(it->first,parents[index]);
-			}
-		}
-	}
+//	for( VertexMap::const_iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
+//	{
+//		::std::vector< ::std::string> parents;
+//
+//		this->getPossibleParents(it->first, this->getVertexList(), this->nodeOrdering, parents);
+//
+//		//generate edge with probability
+//		int edgeCounter = this->getDegree() - this->getParents(this->getVertex(it->first)).size();
+//
+//		::std::cout << "graph degree = " << this->getDegree() << ::std::endl;
+//		::std::cout << "Edge Counter" << edgeCounter << ::std::endl;
+//
+//		for (int i =0; i < edgeCounter; ++i)
+//			if(generateRandomFloat(0.0,1.0) <= probability)
+//			{
+//				int index = generateRandomInt(0,parents.size() - 1);
+//
+//				if( !this->isEdge(it->first, parents[index]))
+//				{
+//					this->addEdge(it->first,parents[index]);
+//					parents.erase(parents.begin() + index);
+//				}
+//			}
+//	}
 }
 
 void
@@ -543,6 +549,8 @@ Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::st
 		::std::copy(index, nodeOrdering.end(), prohibitedParents.begin());
 
 	parents = const_cast< ::std::vector< ::std::string>& >(nodes) - prohibitedParents;
+
+	parents.erase(::std::find(parents.begin(),parents.end(),node));
 }
 
 bool

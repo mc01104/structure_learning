@@ -19,7 +19,7 @@ operator + (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::stri
 
 int generateRandomInt (const int& min, const int& max);
 
-float generateRandomFloat(const float& min, const float& max);
+float generateRandomFloat(float min, float max);
 
 //transpose for vectors
 #endif /* UTILITIES_H_ */

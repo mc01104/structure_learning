@@ -37,30 +37,22 @@ int main(int argc, char* argv[])
 bool test_graph()
 {
 
-        Network* g = new Network();
+		::std::ofstream myfile;
+		myfile.open("net");
+		::std::vector< ::std::string> nodes;
+		nodes.push_back("George");
+		nodes.push_back("Mpampis");
+		nodes.push_back("Spyros");
+		nodes.push_back("Kwstas");
+		nodes.push_back("Dimitris");
 
-        g->addVertex("George");
-        g->addVertex("Spyros");
-        g->addVertex("Mpampis");
+		Network net = Network::generateRandomNetwork(nodes);
 
-        g->addEdge(g->getVertex("George"),g->getVertex("Mpampis"));
-        g->addEdge(g->getVertex("Mpampis"),g->getVertex("Spyros"));
+		::std::cout << "number of edges :" << net.getNumEdges() << ::std::endl;
+		::std::cout << "number of vertices :" << net.getNumVertices() << ::std::endl;
+		net.printGraph(myfile);
 
-
-        if (g->isAcyclic())
-                 cout << "graph is acyclic" << endl;
-         else
-                 cout << "graph is cyclic" << endl;
-
-        g->addEdge("Spyros","George");
-
-
-        if (g->isAcyclic())
-                cout << "graph is acyclic" << endl;
-        else
-                cout << "graph is cyclic" << endl;
-
-
+		myfile.close();
 
         return true;
 }

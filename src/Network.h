@@ -32,7 +32,7 @@ class Network
 		virtual ~Network();
 
 		/** Maximum degree per vertex. */
-		::std::size_t degree;
+		int degree;
 
 
 
@@ -91,7 +91,7 @@ class Network
 
 		::std::vector < ::std::string> getVertexList();
 
-		::std::size_t getDegree() const {return this->degree;};
+		int getDegree() const {return this->degree;};
 
 		VertexBundle getVertexProperties(const ::std::string& vertexName);
 
@@ -109,7 +109,7 @@ class Network
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
 
-		void addRandomEdges( float probability);
+		void addRandomEdges( float probability, int numOfIterations = 1000);
 
 		void removeRandomEdges( float probability);
 

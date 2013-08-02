@@ -40,30 +40,16 @@ operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::stri
 int
 generateRandomInt (const int& min, const int& max)
 {
-	::boost::mt19937 rng;
 
-	::boost::uniform_int<> gen(min,max);
-
-	::boost::variate_generator< ::boost::mt19937, ::boost::uniform_int<> > numberGenerator(rng,gen);
-
-	rng.seed(::std::time(0));
-
-	return numberGenerator();
+	srand(::std::time(0));
+	return min + rand() % (max - min);
 }
 
 float
-generateRandomFloat(const float& min, const float& max)
+generateRandomFloat(float min, float max)
 {
-	::boost::mt19937 rng;
-
-	::boost::uniform_real<> gen(min,max);
-
-	::boost::variate_generator< ::boost::mt19937, ::boost::uniform_real<> > numberGenerator(rng,gen);
-
-	rng.seed(::std::time(0));
-
-	return numberGenerator();
-
+	srand(::std::time(0));
+	return  min + (float)rand()/((float)RAND_MAX/(max-min));
 }
 
 
