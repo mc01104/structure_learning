@@ -356,17 +356,17 @@ Network::getLeafNodes()
 }
 
 
-VertexBundle
-Network::getVertexProperties(const ::std::string& vertexName)
-{
-	return this->graph[this->vertexMap[vertexName]];
-}
-
-EdgeBundle
-Network::getEdgeProperties(const Edge& e)
-{
-	return this->graph[e];
-}
+//const VertexBundle&
+//Network::getVertexProperties(const ::std::string& vertexName) const
+//{
+//	return this->graph[this->vertexMap[vertexName]];
+//}
+//
+//const EdgeBundle&
+//Network::getEdgeProperties(const Edge& e) const
+//{
+//	return this->graph[e];
+//}
 
 void
 Network::setEdgeProperties(const Edge& e, const EdgeBundle& props)
@@ -456,7 +456,7 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 
 	tmp->setProhibitedEdges(prohibitedEdges);
 
-	for(int i = 0; i < 100000; i++)
+	for(int i = 0; i < 100; i++)
 		tmp->addRandomEdge(0.3);
 
 	//remove prohibited edges
@@ -488,9 +488,8 @@ void
 Network::addRandomEdge(float probability)
 {
 
-	int node_ind = generateRandomInt(0,this->getNumVertices() -1);
+	int node_ind = rand.randInt(0,this->getNumVertices() - 1);
 
-	//::std::cout << node_ind << ::std::endl;
 	::std::string node_name = this->getVertexList()[node_ind];
 
 	Vertex v = this->getVertex(node_name);
@@ -502,15 +501,15 @@ Network::addRandomEdge(float probability)
 	::std::vector< ::std::string> parents;
 	 this->getPossibleParents(node_name,this->getVertexList(),this->nodeOrdering,parents);
 
-	 int parent_ind = generateRandomInt(0,parents.size());
+	 int parent_ind = rand.randInt(0, parents.size());
 
-	 if(generateRandomFloat(0.0,1.0) > probability) return;
+	 if(rand.randFloat(0.0,1.0) > probability) return;
 
 	 EdgePair edge(parents[parent_ind], node_name);
 
 	 if(this->isEdgeProhibited(edge)) return;
 
-	 if( !this->isEdge(parents[parent_ind], node_name))
+	 if( !this->isEdge(parents[parent_ind], node_name) && !this->isEdge(node_name,parents[parent_ind]))
 	 	 this->addEdge(parents[parent_ind], node_name);
 
 
@@ -519,11 +518,13 @@ Network::addRandomEdge(float probability)
 void
 Network::removeRandomEdge(float probability)
 {
-	int edge_ind = generateRandomInt(0,this->getEdgeVector().size() - 1);
+	int edge_ind = rand.randInt(0,this->getEdgeVector().size() - 1);
 
 	EdgePair edge = this->getEdgeVector()[edge_ind];
 
 	if (this->isEdgeRequired(edge)) return;
+
+	if(rand.randFloat(0.0,1.0) > probability) return;
 
 	this->removeEdge(edge);
 }
@@ -533,14 +534,18 @@ Network::randomizeNetwork()
 {
 	//remove random edges
 	for(int i = 0; i < 10; ++i)
-		this->removeRandomEdge(0.2);
+	{
+		if (this->getNumEdges() > 0)
+			this->removeRandomEdge(0.2);
+	}
+
 
 	//add random edges
 	for(int i = 0; i < 10; i++)
-		this->addRandomEdge(0.1);
+		this->addRandomEdge(0.3);
 
-	while(!this->isAcyclic())
-		this->randomizeNetwork();
+	//while(!this->isAcyclic())
+	//	this->randomizeNetwork();
 
 }
 
@@ -604,10 +609,8 @@ bool
 Network::isVertex(const ::std::string& vertexName)
 {
 	for(VertexMap::iterator it = this->vertexMap.begin(); it != this->vertexMap.end(); ++it)
-	{
 		if(it->first == vertexName)
 			return true;
-	}
 
 	return false;
 
@@ -616,11 +619,10 @@ Network::isVertex(const ::std::string& vertexName)
 bool
 Network::isEdge(const ::std::string& source, const ::std::string& target)
 {
-	for(EdgeVector::iterator it = this->edges.begin(); it != this->edges.end(); ++it)
-	{
-		if(it->first == source && it->second == target)
-			return true;
-	}
+	EdgePair edge(source,target);
+
+	if (::std::find(this->edges.begin(),this->edges.end(),edge) != this->edges.end())
+		return true;
 
 	return false;
 }

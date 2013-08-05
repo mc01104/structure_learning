@@ -52,4 +52,29 @@ generateRandomFloat(float min, float max)
 	return  min + (float)rand()/((float)RAND_MAX/(max-min));
 }
 
+RandomNumberGenerator::RandomNumberGenerator() {
+	rng.seed(::std::time(0));
+}
+
+float
+RandomNumberGenerator::randFloat(float min, float max)
+{
+	::boost::uniform_real<> gen(min,max);
+
+	::boost::variate_generator< ::boost::mt19937&, ::boost::uniform_real<> > numberGenerator(rng,gen);
+
+	return numberGenerator();
+}
+
+int
+RandomNumberGenerator::randInt(int min, int max)
+{
+	::boost::uniform_int<> gen(min,max);
+
+	::boost::variate_generator< ::boost::mt19937&, ::boost::uniform_int<> > numberGenerator(rng,gen);
+
+	return numberGenerator();
+}
+
+
 

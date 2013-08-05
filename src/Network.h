@@ -8,14 +8,18 @@
 #ifndef NETWORK_H_
 #define NETWORK_H_
 
+#include "Utilities.h"
 #include "NetworkDefs.h"
-
 class Network
 {
 
 	friend class ostream;
 
 	public:
+
+		/**
+		 * @brief - Default Constructor for the Network Class
+		 */
 		Network();
 
 		Network(Network* net);
@@ -23,7 +27,7 @@ class Network
 		Network(const Network& net);
 
 		Network(const ::std::vector< ::std::string>& nodes,
-				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges);
+				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& );
 
 		virtual ~Network();
 
@@ -154,6 +158,8 @@ class Network
 		EdgeVector requiredEdges;
 
 		EdgeVector prohibitedEdges;
+
+		RandomNumberGenerator rand;
 
 };
 
