@@ -11,6 +11,8 @@
 #include "Utilities.h"
 #include "Network.h"
 
+//TODO:also replicate required, prohibited and node ordering in the copy constructors
+//TODO:the degree - i.e. number of possible parents should be a parameter in construction
 Network::Network():
 degree(10),
 graph()
@@ -74,7 +76,6 @@ Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector
 
 Network::~Network()
 {
-
 }
 
 Vertex
@@ -450,27 +451,7 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 	//generate random network
 	Network* tmp = new Network(nodes,requiredEdges);
 
-	tmp->setNodeOrdering(nodeOrdering);
-
-	tmp->setRequiredEdges(requiredEdges);
-
-	tmp->setProhibitedEdges(prohibitedEdges);
-
-	for(int i = 0; i < 100; i++)
-		tmp->addRandomEdge(0.3);
-
-	//remove prohibited edges
-	for( ::std::vector< EdgePair>::const_iterator it = prohibitedEdges.begin(); it != prohibitedEdges.end(); ++it)
-		if(tmp->isEdge(it->first, it->second))
-			tmp->removeEdge(*it);
-
-	//check if graph is acyclic
-	if (tmp->isAcyclic())
-		return *tmp;
-
-	delete tmp;
-
-	return Network::generateRandomNetwork(nodes, nodeOrdering, requiredEdges, prohibitedEdges);
+	return tmp->randomizeNetwork();
 }
 
 ::std::vector < ::std::string>
@@ -529,23 +510,26 @@ Network::removeRandomEdge(float probability)
 	this->removeEdge(edge);
 }
 
-void
+//TODO probabilities of adding and removing edges shouldn't be handcoded
+Network*
 Network::randomizeNetwork()
 {
-	//remove random edges
+	Network* tmp = new Network(this);
+
 	for(int i = 0; i < 10; ++i)
-	{
 		if (this->getNumEdges() > 0)
 			this->removeRandomEdge(0.2);
-	}
+
+	for(int i = 0; i < 100; i++)
+		tmp->addRandomEdge(0.3);
 
 
-	//add random edges
-	for(int i = 0; i < 10; i++)
-		this->addRandomEdge(0.3);
+	if (tmp->isAcyclic())
+		return tmp;
 
-	//while(!this->isAcyclic())
-	//	this->randomizeNetwork();
+	delete tmp;
+
+	return this->randomizeNetwork();
 
 }
 
@@ -630,13 +614,5 @@ Network::isEdge(const ::std::string& source, const ::std::string& target)
 bool
 Network::isNetworkConsistent()
 {
-	if (!this-isAcyclic()) return false;
-
-	this->checkForRequiredEdges();
-
-	this->checkForProhibitedEdges();
-
-	//this->checkForNodeOrdering();
-
-	return true;
+	return this->checkForRequiredEdges() || this->checkForProhibitedEdges() || this->isAcyclic();
 }

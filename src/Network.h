@@ -107,7 +107,9 @@ class Network
 
 		bool operator == ( const Network& net);
 
-		void randomizeNetwork();
+		//TODO overload assignment operator
+
+		Network* randomizeNetwork();
 
 		bool isNetworkConsistent();
 
