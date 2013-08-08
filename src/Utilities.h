@@ -19,6 +19,9 @@ operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::stri
 ::std::vector< std::string>&
 operator + (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::string>& rhs);
 
+::std::ostream&
+operator << (::std::ostream& os, const ::std::vector< ::std::string>& input);
+
 class RandomNumberGenerator
 {
 	public:

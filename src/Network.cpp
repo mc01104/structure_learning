@@ -442,7 +442,7 @@ Network::operator==(const Network& net)
 }
 
 
-Network
+Network*
 Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 								   const ::std::vector< ::std::string>& nodeOrdering,
 								   const ::std::vector< EdgePair>& requiredEdges,
@@ -450,6 +450,9 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 {
 	//generate random network
 	Network* tmp = new Network(nodes,requiredEdges);
+
+	tmp->setNodeOrdering(nodeOrdering);
+	tmp->setProhibitedEdges(prohibitedEdges);
 
 	return tmp->randomizeNetwork();
 }
@@ -493,6 +496,9 @@ Network::addRandomEdge(float probability)
 	 if( !this->isEdge(parents[parent_ind], node_name) && !this->isEdge(node_name,parents[parent_ind]))
 	 	 this->addEdge(parents[parent_ind], node_name);
 
+	 if(!this->isAcyclic())
+		 this->removeEdge(EdgePair(parents[parent_ind], node_name));
+
 
 }
 
@@ -516,21 +522,14 @@ Network::randomizeNetwork()
 {
 	Network* tmp = new Network(this);
 
-	for(int i = 0; i < 10; ++i)
-		if (this->getNumEdges() > 0)
-			this->removeRandomEdge(0.2);
-
 	for(int i = 0; i < 100; i++)
-		tmp->addRandomEdge(0.3);
+		tmp->addRandomEdge(0.2);
 
+	for(int i = 0; i < 10; i++)
+		if (tmp->getNumEdges() > 0)
+			tmp->removeRandomEdge(0.2);
 
-	if (tmp->isAcyclic())
-		return tmp;
-
-	delete tmp;
-
-	return this->randomizeNetwork();
-
+	return tmp;
 }
 
 

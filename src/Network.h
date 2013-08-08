@@ -115,7 +115,7 @@ class Network
 
 		bool isAcyclic();
 
-		static Network  generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
+		static Network*  generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 												  const ::std::vector< ::std::string>& nodeOrdering = ::std::vector< ::std::string>(),
 											      const ::std::vector< EdgePair>& requiredEdges = ::std::vector< EdgePair>(),
 											      const ::std::vector< EdgePair>& prohibitedEdges = ::std::vector< EdgePair>());
@@ -130,10 +130,11 @@ class Network
 
 		bool isEdgeProhibited(const EdgePair& edge);
 
+	public:
 		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
-
+	protected:
 		bool checkForRequiredEdges();
 
 		bool checkForProhibitedEdges();

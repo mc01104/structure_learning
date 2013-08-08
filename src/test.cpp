@@ -64,12 +64,29 @@ bool test_graph()
 		nodes.push_back("Kwstas");
 		nodes.push_back("Dimitris");
 
-		//Network net = Network::generateRandomNetwork(nodes);
-		Network net = Network(nodes,::std::vector<EdgePair>());
-		net.randomizeNetwork();
-		::std::cout << "number of edges :" << net.getNumEdges() << ::std::endl;
-		::std::cout << "number of vertices :" << net.getNumVertices() << ::std::endl;
-		net.printGraph(myfile);
+		::std::vector<EdgePair> prohibited;
+		prohibited.push_back(EdgePair("George","Kwstas"));
+		prohibited.push_back(EdgePair("George","Spyros"));
+		NodeOrdering ordering;
+		ordering.push_back("George");
+		ordering.push_back("Mpampis");
+		ordering.push_back("Spyros");
+
+		Network* net = Network::generateRandomNetwork(nodes,ordering,::std::vector<EdgePair>(),prohibited);
+//		Network net = Network(nodes,::std::vector<EdgePair>());
+//		Network* random = net.randomizeNetwork();
+		::std::vector< ::std::string> parents;
+
+//		net->getPossibleParents("George", net->getVertexList(),ordering,parents);
+		::std::cout << "Possible parents for George: " << ordering  << ::std::endl;
+//		net->getPossibleParents("Mpampis", net->getVertexList(),ordering,parents);
+//		::std::cout << "Possible parents for Mpampis: " << parents  << ::std::endl;
+//		net->getPossibleParents("Spyros", net->getVertexList(),ordering,parents);
+//		::std::cout << "Possible parents for Spyros: " << parents  << ::std::endl;
+
+		::std::cout << "number of edges :" << net->getNumEdges() << ::std::endl;
+		::std::cout << "number of vertices :" << net->getNumVertices() << ::std::endl;
+		net->printGraph(myfile);
 
 		myfile.close();
 

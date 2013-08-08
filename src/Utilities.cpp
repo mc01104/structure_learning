@@ -37,6 +37,16 @@ operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::stri
 	return lhs;
 }
 
+::std::ostream&
+ operator << (::std::ostream& os, const ::std::vector< ::std::string>& input)
+{
+	for(::std::vector< ::std::string>::const_iterator it = input.begin(); it != input.end(); ++it)
+		os << *it << "  ";
+	os << ::std::endl;
+
+	return os;
+}
+
 int
 generateRandomInt (const int& min, const int& max)
 {
