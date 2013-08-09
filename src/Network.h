@@ -109,6 +109,12 @@ class Network
 
 		//TODO overload assignment operator
 
+		EdgeVector getRequiredEdges() const {return this->requiredEdges;};
+
+		EdgeVector getProhibitedEdges() const {return this->prohibitedEdges;};
+
+		NodeOrdering getNodeOrdering() const {return this->nodeOrdering;};
+
 		Network* randomizeNetwork();
 
 		bool isNetworkConsistent();

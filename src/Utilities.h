@@ -13,14 +13,18 @@
 #include <string>
 #include <vector>
 
-::std::vector< std::string>&
-operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::string>& rhs);
+
+::std::vector< std::string>
+operator - (::std::vector< ::std::string>& lhs, ::std::vector< ::std::string>& rhs);
 
 ::std::vector< std::string>&
 operator + (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::string>& rhs);
 
 ::std::ostream&
 operator << (::std::ostream& os, const ::std::vector< ::std::string>& input);
+
+::std::ostream&
+operator << (::std::ostream& os, const ::std::vector< ::std::pair< ::std::string, ::std::string > >& input);
 
 class RandomNumberGenerator
 {
@@ -37,9 +41,6 @@ class RandomNumberGenerator
 
 };
 
-int generateRandomInt (const int& min, const int& max);
-
-float generateRandomFloat(float min, float max);
 
 //transpose for vectors
 #endif /* UTILITIES_H_ */

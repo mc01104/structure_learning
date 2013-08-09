@@ -11,17 +11,19 @@
 #include <ctime>
 
 
-::std::vector< std::string>&
-operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::string>& rhs)
+::std::vector< std::string>
+operator - (::std::vector< ::std::string>& lhs, ::std::vector< ::std::string>& rhs)
 {
-	for(::std::vector< ::std::string>::iterator it = lhs.begin(); it != lhs.end(); ++it)
-	{
-		if ( ::std::find(rhs.begin(), rhs.end(), *it) != rhs.end())
-					lhs.erase(it);
+	::std::vector< ::std::string> tmp(lhs);
 
+	for(::std::vector< ::std::string>::iterator it = rhs.begin(); it != rhs.end(); ++it)
+	{
+		::std::vector < ::std::string>::iterator iter = ::std::find(tmp.begin(), tmp.end(), *it);
+		if ( iter != tmp.end())
+			tmp.erase(iter);
 	}
 
-	return lhs;
+	return tmp;
 }
 
 ::std::vector< ::std::string>&
@@ -47,20 +49,16 @@ operator - (::std::vector< ::std::string>& lhs, const ::std::vector< ::std::stri
 	return os;
 }
 
-int
-generateRandomInt (const int& min, const int& max)
+::std::ostream&
+ operator << (::std::ostream& os, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& input)
 {
+	::std::vector< ::std::pair< ::std::string, ::std::string> >::const_iterator it;
+	for(it = input.begin(); it != input.end(); ++it)
+		os << "first:" << it->first << "  second :" << it->second << ::std::endl;
 
-	//srand(::std::time(0));
-	return min + rand() % (max - min);
+	return os;
 }
 
-float
-generateRandomFloat(float min, float max)
-{
-	srand(::std::time(0));
-	return  min + (float)rand()/((float)RAND_MAX/(max-min));
-}
 
 RandomNumberGenerator::RandomNumberGenerator() {
 	rng.seed(::std::time(0));

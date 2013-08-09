@@ -37,6 +37,10 @@ Network::Network(Network* net)
 
 	for( iter = tmpEdges.begin(); iter != tmpEdges.end(); ++iter)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
+
+	//this->requiredEdges = net->getRequiredEdges();
+	this->prohibitedEdges = net->getProhibitedEdges();
+	this->nodeOrdering = net->getNodeOrdering();
 }
 
 Network::Network(const Network& net)
@@ -56,6 +60,11 @@ Network::Network(const Network& net)
 
 	for( iter = tmpEdges.begin(); iter != tmpEdges.end(); ++iter)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
+
+	//this->requiredEdges = net.getRequiredEdges();
+	this->prohibitedEdges = net.getProhibitedEdges();
+	this->nodeOrdering = net.getNodeOrdering();
+
 }
 
 
@@ -472,6 +481,8 @@ void
 Network::addRandomEdge(float probability)
 {
 
+	if(rand.randFloat(0.0,1.0) > probability) return;
+
 	int node_ind = rand.randInt(0,this->getNumVertices() - 1);
 
 	::std::string node_name = this->getVertexList()[node_ind];
@@ -485,9 +496,7 @@ Network::addRandomEdge(float probability)
 	::std::vector< ::std::string> parents;
 	 this->getPossibleParents(node_name,this->getVertexList(),this->nodeOrdering,parents);
 
-	 int parent_ind = rand.randInt(0, parents.size());
-
-	 if(rand.randFloat(0.0,1.0) > probability) return;
+	 int parent_ind = rand.randInt(0, parents.size() - 1);
 
 	 EdgePair edge(parents[parent_ind], node_name);
 
@@ -580,12 +589,19 @@ Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::st
 
 	NodeOrdering::const_iterator index = ::std::find(nodeOrdering.begin(), nodeOrdering.end(), node);
 
-	if(index != nodeOrdering.end())
-		::std::copy(index, nodeOrdering.end(), prohibitedParents.begin());
+	if (index != nodeOrdering.end())
+	{
+		NodeOrdering::const_iterator it;
+		for(it = index; it != nodeOrdering.end(); ++it)
+			prohibitedParents.push_back(*it);
+	}
+	else
+	{
+		prohibitedParents.push_back(node);
+	}
 
 	parents = const_cast< ::std::vector< ::std::string>& >(nodes) - prohibitedParents;
 
-	parents.erase(::std::find(parents.begin(),parents.end(),node));
 }
 
 bool
