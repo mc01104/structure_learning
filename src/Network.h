@@ -27,7 +27,7 @@ class Network
 		Network(const Network& net);
 
 		Network(const ::std::vector< ::std::string>& nodes,
-				 const ::std::vector< ::std::pair< ::std::string, ::std::string> >& );
+				 const EdgeVector& edges );
 
 		virtual ~Network();
 
@@ -70,6 +70,8 @@ class Network
 		::std::size_t getNumVertices() const;
 
 		std::vector< Vertex> getLeafNodes();
+
+		void getLeafNodes(::std::vector< ::std::string>& leafNodes);
 
 		Graph& getGraph() {return this->graph;};
 
@@ -132,7 +134,7 @@ class Network
 
 		bool isEdgeProhibited(const EdgePair& edge);
 
-		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
+		void getPossibleParents(const ::std::string& node, ::std::vector< ::std::string> nodes,
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
 

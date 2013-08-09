@@ -72,7 +72,7 @@ Network::Network(const Network& net)
 }
 
 
-Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector< ::std::pair< ::std::string, ::std::string> >& edges):
+Network::Network(const ::std::vector< ::std::string>& nodes, const EdgeVector& edges):
 		degree(10)
 {
 	::std::vector< ::std::string>::const_iterator it;
@@ -85,8 +85,7 @@ Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector
 	for(iter = edges.begin(); iter != edges.end(); ++iter)
 		this->addEdge(*iter);
 
-	this->setRequiredEdges(edges);
-
+	//this->setRequiredEdges(edges);
 }
 
 Network::~Network()
@@ -179,20 +178,16 @@ Network::getNumVertices() const
 }
 
 
+//TODO:is acyclic can perform some initial check in the graph before creating a new object
 bool
 Network::isAcyclic()
 {
-	Network* tmp = new Network(this);
-
-	size_t numOfVertices = tmp->getNumVertices();
-
-	if( numOfVertices == 0)
+	if( this->getNumVertices() == 0)
 	{
 		return true;
 	}
 
-	if ( tmp->getLeafNodes().size() == 0)
-		return false;
+	Network* tmp = new Network(this);
 
 	Vertex v;
 
@@ -203,9 +198,11 @@ Network::isAcyclic()
 		tmp->removeVertex(v);
 		return tmp->isAcyclic();
 	}
-
-	delete tmp;
-	return false;
+	else
+	{
+		delete tmp;
+		return false;
+	}
 
 }
 
@@ -237,10 +234,9 @@ Network::removeEdge(const Edge& e)
 	for(std::vector<Vertex>::iterator it = start; it != end; it++)
 	{
 		if(*it == ::boost::source(e, this->graph))
-		{
 			this->graph[::boost::target(e, this->graph)].parents.erase(it);
-		}
 	}
+
 	::boost::remove_edge(e, this->graph);
 }
 
@@ -486,7 +482,7 @@ Network::addRandomEdge(float probability)
 	if (vertex_degree == 0) return;
 
 	::std::vector< ::std::string> parents;
-	this->getPossibleParents(node_name,this->getVertexList(),this->nodeOrdering,parents);
+	this->getPossibleParents(node_name, this->getVertexList(),this->nodeOrdering,parents);
 
 	int parent_ind = rand.randInt(0, parents.size() - 1);
 
@@ -561,6 +557,16 @@ Network::setNodeOrdering(const NodeOrdering& nodeOrdering)
 }
 
 void
+Network::getLeafNodes(::std::vector< ::std::string>& leafNodes)
+{
+	leafNodes.clear();
+
+	for(::std::vector< Vertex>::iterator it = this->getLeafNodes().begin(); it != this->getLeafNodes().end(); ++it)
+		leafNodes.push_back(this->getGraph()[*it].name);
+
+}
+
+void
 Network::removeRandomEdge(float probability)
 {
 	int edge_ind = rand.randInt(0,this->getEdgeVector().size() - 1);
@@ -630,7 +636,7 @@ Network::checkForProhibitedEdges()
 }
 
 void
-Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
+Network::getPossibleParents(const ::std::string& node, ::std::vector< ::std::string> nodes,
 							    const NodeOrdering& nodeOrdering,
 							    ::std::vector< ::std::string>& parents)
 {
@@ -649,7 +655,7 @@ Network::getPossibleParents(const ::std::string& node, const ::std::vector< ::st
 		prohibitedParents.push_back(node);
 	}
 
-	parents = const_cast< ::std::vector< ::std::string>& >(nodes) - prohibitedParents;
+	parents = nodes - prohibitedParents;
 
 }
 
