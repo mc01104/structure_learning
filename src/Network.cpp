@@ -566,6 +566,12 @@ Network::getLeafNodes(::std::vector< ::std::string>& leafNodes)
 
 }
 
+Network
+Network::operator =(const Network& net)
+{
+	return Network(net);
+}
+
 void
 Network::removeRandomEdge(float probability)
 {

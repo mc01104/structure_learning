@@ -103,9 +103,9 @@ class Network
 
 		void setNodeOrdering( const NodeOrdering& nodeOrdering);
 
-		bool operator == ( const Network& net);
+		bool operator == (const Network& net);
 
-		//TODO overload assignment operator
+		Network operator = (const Network& net);
 
 		EdgeVector getRequiredEdges() const {return this->requiredEdges;};
 
