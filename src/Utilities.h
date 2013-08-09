@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-
+//TODO make the overloaded functions templated
 ::std::vector< std::string>
 operator - (::std::vector< ::std::string>& lhs, ::std::vector< ::std::string>& rhs);
 

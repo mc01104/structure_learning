@@ -38,9 +38,11 @@ Network::Network(Network* net)
 	for( iter = tmpEdges.begin(); iter != tmpEdges.end(); ++iter)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
 
-	//this->requiredEdges = net->getRequiredEdges();
-	this->prohibitedEdges = net->getProhibitedEdges();
-	this->nodeOrdering = net->getNodeOrdering();
+	this->setRequiredEdges(net->getRequiredEdges());
+
+	this->setProhibitedEdges(net->getProhibitedEdges());
+
+	this->setNodeOrdering(net->getNodeOrdering());
 }
 
 Network::Network(const Network& net)
@@ -61,9 +63,11 @@ Network::Network(const Network& net)
 	for( iter = tmpEdges.begin(); iter != tmpEdges.end(); ++iter)
 		this->addEdge(this->vertexMap[iter->first],this->vertexMap[iter->second]);
 
-	//this->requiredEdges = net.getRequiredEdges();
-	this->prohibitedEdges = net.getProhibitedEdges();
-	this->nodeOrdering = net.getNodeOrdering();
+	this->setRequiredEdges(net.getRequiredEdges());
+
+	this->setProhibitedEdges(net.getProhibitedEdges());
+
+	this->setNodeOrdering(net.getNodeOrdering());
 
 }
 
@@ -80,6 +84,8 @@ Network::Network(const ::std::vector< ::std::string>& nodes, const ::std::vector
 
 	for(iter = edges.begin(); iter != edges.end(); ++iter)
 		this->addEdge(*iter);
+
+	this->setRequiredEdges(edges);
 
 }
 
@@ -270,7 +276,6 @@ Network::removeVertex(const Vertex& v)
 
 	for(std::vector< Vertex>::iterator it = parents.begin(); it != parents.end(); ++it )
 		this->removeEdge(*it,v);
-		//::boost::remove_edge(*it,v,this->graph);
 
 	::boost::remove_vertex(v, this->graph);
 
@@ -364,19 +369,6 @@ Network::getLeafNodes()
 
 	return leafNodes;
 }
-
-
-//const VertexBundle&
-//Network::getVertexProperties(const ::std::string& vertexName) const
-//{
-//	return this->graph[this->vertexMap[vertexName]];
-//}
-//
-//const EdgeBundle&
-//Network::getEdgeProperties(const Edge& e) const
-//{
-//	return this->graph[e];
-//}
 
 void
 Network::setEdgeProperties(const Edge& e, const EdgeBundle& props)
@@ -494,21 +486,78 @@ Network::addRandomEdge(float probability)
 	if (vertex_degree == 0) return;
 
 	::std::vector< ::std::string> parents;
-	 this->getPossibleParents(node_name,this->getVertexList(),this->nodeOrdering,parents);
+	this->getPossibleParents(node_name,this->getVertexList(),this->nodeOrdering,parents);
 
-	 int parent_ind = rand.randInt(0, parents.size() - 1);
+	int parent_ind = rand.randInt(0, parents.size() - 1);
 
-	 EdgePair edge(parents[parent_ind], node_name);
+	EdgePair edge(parents[parent_ind], node_name);
 
-	 if(this->isEdgeProhibited(edge)) return;
+	if(this->isEdgeProhibited(edge)) return;
 
-	 if( !this->isEdge(parents[parent_ind], node_name) && !this->isEdge(node_name,parents[parent_ind]))
+	if( !this->isEdge(parents[parent_ind], node_name) && !this->isEdge(node_name,parents[parent_ind]))
 	 	 this->addEdge(parents[parent_ind], node_name);
 
-	 if(!this->isAcyclic())
+	if(!this->isAcyclic())
 		 this->removeEdge(EdgePair(parents[parent_ind], node_name));
 
 
+}
+
+bool
+Network::conflictProhibitedRequired()
+{
+	for(EdgeVector::iterator it = this->prohibitedEdges.begin(); it != this->prohibitedEdges.end(); ++it)
+		if( ::std::find(this->requiredEdges.begin(), this->requiredEdges.end(), *it) != this->requiredEdges.end())
+			return true;
+
+	return false;
+}
+
+bool
+Network::conflictRequiredNodeOrdering()
+{
+	for(EdgeVector::iterator it = this->requiredEdges.begin(); it != this->requiredEdges.end(); ++it)
+	{
+		NodeOrdering::iterator index = ::std::find( this->nodeOrdering.begin(), nodeOrdering.end(), it->first);
+		if (::std::find( index, this->nodeOrdering.end(), it->second) != this->nodeOrdering.end())
+			return true;
+	}
+
+	return false;
+}
+
+bool
+Network::conflictingConstraints()
+{
+	return this->conflictProhibitedRequired() || this->conflictRequiredNodeOrdering();
+}
+
+void
+Network::setRequiredEdges(const EdgeVector& edges)
+{
+	if (this->conflictingConstraints())
+		throw ::std::string("Cannot set required edges: Check for conflicts with the prohibited edges or the node ordering");
+
+	this->requiredEdges = edges;
+}
+
+void
+Network::setProhibitedEdges(const EdgeVector& edges)
+{
+	if (this->conflictingConstraints())
+		throw ::std::string("Cannot set prohibited edges: Check for conflicts with the required edges");
+
+	this->prohibitedEdges = edges;
+
+}
+
+void
+Network::setNodeOrdering(const NodeOrdering& nodeOrdering)
+{
+	if (this->conflictingConstraints())
+		throw ::std::string("Cannot set node ordering: Check for conflicts with the required edges");
+
+	this->nodeOrdering = nodeOrdering;
 }
 
 void

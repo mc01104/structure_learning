@@ -69,18 +69,26 @@ bool test_graph()
 		prohibited.push_back(EdgePair("Dimitris","Kwstas"));
 		prohibited.push_back(EdgePair("George","Spyros"));
 
-		required.push_back(EdgePair("George", "Giannis"));
+		required.push_back(EdgePair("Mpampis", "George"));
 		NodeOrdering ordering;
 		ordering.push_back("George");
 		ordering.push_back("Mpampis");
 		ordering.push_back("Spyros");
 		ordering.push_back("Giannis");
 
-		Network* net = Network::generateRandomNetwork(nodes,ordering,::std::vector<EdgePair>(),prohibited);
+		try
+		{
+			Network* net = Network::generateRandomNetwork(nodes,ordering,required,prohibited);
+			::std::cout << "number of edges :" << net->getNumEdges() << ::std::endl;
+			::std::cout << "number of vertices :" << net->getNumVertices() << ::std::endl;
+			net->printGraph(myfile);
+		}
+		catch(::std::string& e)
+		{
+			::std::cout << e << ::std::endl;
+		}
 
-		::std::cout << "number of edges :" << net->getNumEdges() << ::std::endl;
-		::std::cout << "number of vertices :" << net->getNumVertices() << ::std::endl;
-		net->printGraph(myfile);
+
 //
 		myfile.close();
 

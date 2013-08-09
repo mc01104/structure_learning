@@ -83,10 +83,6 @@ class Network
 
 		int getDegree() const {return this->degree;};
 
-		//VertexBundle getVertexProperties(const ::std::string& vertexName);
-
-		//EdgeBundle getEdgeProperties(const Edge& e);
-
 		void setEdgeProperties(const Edge& e, const EdgeBundle& props);
 
 		void setVertexProperties(const Vertex& v, const VertexBundle& props);
@@ -99,11 +95,11 @@ class Network
 
 		std::vector< ::std::string> getParents(const ::std::string& vertexName);
 
-		void setRequiredEdges( const EdgeVector& edges) { this->requiredEdges = edges;};
+		void setRequiredEdges( const EdgeVector& edges);
 
-		void setProhibitedEdges( const EdgeVector& edges) { this->prohibitedEdges = edges;};
+		void setProhibitedEdges( const EdgeVector& edges);
 
-		void setNodeOrdering( const ::std::vector< ::std::string>& nodeOrdering) { this->nodeOrdering = nodeOrdering;};
+		void setNodeOrdering( const NodeOrdering& nodeOrdering);
 
 		bool operator == ( const Network& net);
 
@@ -136,20 +132,26 @@ class Network
 
 		bool isEdgeProhibited(const EdgePair& edge);
 
-	public:
 		void getPossibleParents(const ::std::string& node, const ::std::vector< ::std::string>& nodes,
 								   const NodeOrdering& nodeOrdering,
 								   ::std::vector< ::std::string>& parents);
-	protected:
+
 		bool checkForRequiredEdges();
 
 		bool checkForProhibitedEdges();
+
+		bool conflictingConstraints();
+
+		bool conflictProhibitedRequired();
+
+		bool conflictRequiredNodeOrdering();
 
 		Vertex findLeafNode();
 
 		void addRandomEdge( float probability);
 
 		void removeRandomEdge( float probability);
+
 
 
 	protected:
