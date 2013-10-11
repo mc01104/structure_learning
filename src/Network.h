@@ -10,6 +10,9 @@
 
 #include "Utilities.h"
 #include "NetworkDefs.h"
+
+//TODO use data-types from NetworkDesf.h
+
 class Network
 {
 

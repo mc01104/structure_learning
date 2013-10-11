@@ -22,6 +22,8 @@ Dataset::Dataset(const ::std::string& inputFile) :
 {
 	this->inputFile = inputFile;
 
+	::std::cout << this->inputFile << ::std::endl;
+
 	this->loadData();
 
 	this->computeTransposeData();
@@ -32,7 +34,7 @@ Dataset::Dataset(const ::std::string& inputFile) :
 
 	this->buildIndexMap();
 
-	//this->buildADTree();
+	this->buildADTree();
 
 }
 
@@ -195,14 +197,14 @@ void test_dataset(const ::std::string& filename)
   Dataset data(filename);
 
   ::std::cout << data.data[1][1] << ::std::endl;
-  ::std::cout << data.data[3][1] << ::std::endl;
-  ::std::cout << data.data[3][2] << ::std::endl;
-
-//  ::std::cout << "...and now the transposed" << ::std::endl;
-//  ::std::cout << data.dataTransposed[1][1] << ::std::endl;
-//   ::std::cout << data.dataTransposed[1][3] << ::std::endl;
-//   ::std::cout << data.dataTransposed[2][3] << ::std::endl;
-
+//  ::std::cout << data.data[3][1] << ::std::endl;
+//  ::std::cout << data.data[3][2] << ::std::endl;
+//
+////  ::std::cout << "...and now the transposed" << ::std::endl;
+////  ::std::cout << data.dataTransposed[1][1] << ::std::endl;
+////   ::std::cout << data.dataTransposed[1][3] << ::std::endl;
+////   ::std::cout << data.dataTransposed[2][3] << ::std::endl;
+//
   for(::std::vector< ::std::string>::iterator it = data.nodes.begin(); it != data.nodes.end(); ++it)
     ::std::cout << *it << ::std::endl;
 

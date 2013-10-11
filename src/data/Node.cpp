@@ -165,7 +165,7 @@ data::ADNode::buildStructure(std::map< ::std::string, int*> index)
 
         n->setName(it->first);
 
-        n->buildStructure(tmp);
+        return n->buildStructure(tmp);
       }
 }
 
@@ -220,7 +220,7 @@ VaryNode::buildStructure(std::map<std::string, int*> index)
 
             tmp.erase(tmp.begin());
 
-            n->buildStructure(tmp);
+           return n->buildStructure(tmp);
           }
         else
           {

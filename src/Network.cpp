@@ -11,7 +11,6 @@
 #include "Utilities.h"
 #include "Network.h"
 
-//TODO:also replicate required, prohibited and node ordering in the copy constructors
 //TODO:the degree - i.e. number of possible parents should be a parameter in construction
 Network::Network():
 degree(10),
@@ -85,7 +84,7 @@ Network::Network(const ::std::vector< ::std::string>& nodes, const EdgeVector& e
 	for(iter = edges.begin(); iter != edges.end(); ++iter)
 		this->addEdge(*iter);
 
-	//this->setRequiredEdges(edges);
+	this->setRequiredEdges(edges);
 }
 
 Network::~Network()
@@ -445,9 +444,8 @@ Network::generateRandomNetwork(const ::std::vector< ::std::string>& nodes,
 								   const ::std::vector< EdgePair>& requiredEdges,
 								   const ::std::vector< EdgePair>& prohibitedEdges)
 {
-	//generate random network
-	Network* tmp = new Network(nodes,requiredEdges);
 
+	Network* tmp = new Network(nodes,requiredEdges);
 	tmp->setNodeOrdering(nodeOrdering);
 	tmp->setProhibitedEdges(prohibitedEdges);
 
@@ -496,14 +494,14 @@ Network::addRandomEdge(float probability)
 	if(!this->isAcyclic())
 		 this->removeEdge(EdgePair(parents[parent_ind], node_name));
 
-
 }
 
 bool
 Network::conflictProhibitedRequired()
 {
+
 	for(EdgeVector::iterator it = this->prohibitedEdges.begin(); it != this->prohibitedEdges.end(); ++it)
-		if( ::std::find(this->requiredEdges.begin(), this->requiredEdges.end(), *it) != this->requiredEdges.end())
+ 		if( ::std::find(this->requiredEdges.begin(), this->requiredEdges.end(), *it) != this->requiredEdges.end())
 			return true;
 
 	return false;
@@ -512,10 +510,10 @@ Network::conflictProhibitedRequired()
 bool
 Network::conflictRequiredNodeOrdering()
 {
-	for(EdgeVector::iterator it = this->requiredEdges.begin(); it != this->requiredEdges.end(); ++it)
+	for(EdgeVector::iterator it = this->requiredEdges.begin(); it != this->requiredEdges.end(); it++)
 	{
-		NodeOrdering::iterator index = ::std::find( this->nodeOrdering.begin(), nodeOrdering.end(), it->first);
-		if (::std::find( index, this->nodeOrdering.end(), it->second) != this->nodeOrdering.end())
+		NodeOrdering::iterator index = ::std::find( this->nodeOrdering.begin(), nodeOrdering.end(), it->second);
+		if (::std::find( index, this->nodeOrdering.end(), it->first) != this->nodeOrdering.end())
 			return true;
 	}
 
@@ -531,29 +529,30 @@ Network::conflictingConstraints()
 void
 Network::setRequiredEdges(const EdgeVector& edges)
 {
+	this->requiredEdges = edges;
+
 	if (this->conflictingConstraints())
 		throw ::std::string("Cannot set required edges: Check for conflicts with the prohibited edges or the node ordering");
 
-	this->requiredEdges = edges;
 }
 
 void
 Network::setProhibitedEdges(const EdgeVector& edges)
 {
-	if (this->conflictingConstraints())
-		throw ::std::string("Cannot set prohibited edges: Check for conflicts with the required edges");
-
 	this->prohibitedEdges = edges;
+
+	if (this->conflictProhibitedRequired())
+		throw ::std::string("Cannot set prohibited edges: Check for conflicts with the required edges");
 
 }
 
 void
 Network::setNodeOrdering(const NodeOrdering& nodeOrdering)
 {
-	if (this->conflictingConstraints())
-		throw ::std::string("Cannot set node ordering: Check for conflicts with the required edges");
-
 	this->nodeOrdering = nodeOrdering;
+
+	if (this->conflictRequiredNodeOrdering())
+		throw ::std::string("Cannot set node ordering: Check for conflicts with the required edges");
 }
 
 void
@@ -567,7 +566,7 @@ Network::getLeafNodes(::std::vector< ::std::string>& leafNodes)
 }
 
 Network
-Network::operator =(const Network& net)
+Network::operator = (const Network& net)
 {
 	return Network(net);
 }
@@ -586,10 +585,11 @@ Network::removeRandomEdge(float probability)
 	this->removeEdge(edge);
 }
 
-//TODO probabilities of adding and removing edges shouldn't be handcoded
+//TODO probabilities of adding and removing edges shouldn't be hand coded
 Network*
 Network::randomizeNetwork()
 {
+
 	Network* tmp = new Network(this);
 
 	for(int i = 0; i < 100; i++)
@@ -657,9 +657,7 @@ Network::getPossibleParents(const ::std::string& node, ::std::vector< ::std::str
 			prohibitedParents.push_back(*it);
 	}
 	else
-	{
 		prohibitedParents.push_back(node);
-	}
 
 	parents = nodes - prohibitedParents;
 

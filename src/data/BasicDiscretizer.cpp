@@ -64,6 +64,7 @@ BasicDiscretizer::columnDiscretizer(Dataset& data,int column, int numOfBins)
 		tmpDiscrete[i] = this->binValue(tmp[i],min,binSize);
 	}
 
+	::std::cout << "discretizing column:"  << column << ::std::endl;
 	::std::cout << "min:" << min << ::std::endl;
 
 	::std::cout << "max" << max << ::std::endl;

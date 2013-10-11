@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 {
     test_graph();
 
-         //test_data();
+    //test_dataset("../src/data/data.txt");
 	//test_random();
 
 	return 0;
@@ -67,11 +67,12 @@ bool test_graph()
 
 		::std::vector<EdgePair> prohibited, required;
 		prohibited.push_back(EdgePair("Dimitris","Kwstas"));
-		prohibited.push_back(EdgePair("George","Spyros"));
+//		prohibited.push_back(EdgePair("Mpampis","George"));
 
 		required.push_back(EdgePair("Mpampis", "George"));
+//		Network* net = new Network(nodes,required);
 		NodeOrdering ordering;
-		ordering.push_back("George");
+		//ordering.push_back("George");
 		ordering.push_back("Mpampis");
 		ordering.push_back("Spyros");
 		ordering.push_back("Giannis");
