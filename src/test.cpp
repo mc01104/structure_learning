@@ -30,9 +30,9 @@ bool test_random();
 
 int main(int argc, char* argv[])
 {
-    test_graph();
+    //test_graph();
 
-    //test_dataset("../src/data/data.txt");
+    test_dataset("../src/data/data.txt");
 	//test_random();
 
 	return 0;

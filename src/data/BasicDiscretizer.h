@@ -12,6 +12,10 @@
 
 namespace data
 {
+	  /**
+	   * @brief Discretizes the data using a fixed bin size
+	   * @details
+	   */
       class BasicDiscretizer: public Discretizer
       {
               public:

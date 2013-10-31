@@ -34,7 +34,7 @@ Dataset::Dataset(const ::std::string& inputFile) :
 
 	this->buildIndexMap();
 
-	this->buildADTree();
+	//this->buildADTree();
 
 }
 
@@ -101,7 +101,7 @@ Dataset::loadData()
 
 }
 
-//FIXED
+
 void
 Dataset::buildIndexMap()
 {
@@ -141,7 +141,7 @@ Dataset::computeArity(int indCol)
 }
 
 
-//this is not going to work - FIX! ---> FIXED
+
 int
 Dataset::computeMCV(int index_elem, int arity)
 {
@@ -175,7 +175,6 @@ Dataset::count(const QueryItem& query)
 	return this->adtree.count(query);
 }
 
-//write a general purpose transpose function
 void
 Dataset::computeTransposeData()
 {
@@ -195,18 +194,6 @@ void test_dataset(const ::std::string& filename)
   ::std::cout << "test_dataset" << ::std::endl;
 
   Dataset data(filename);
-
-  ::std::cout << data.data[1][1] << ::std::endl;
-//  ::std::cout << data.data[3][1] << ::std::endl;
-//  ::std::cout << data.data[3][2] << ::std::endl;
-//
-////  ::std::cout << "...and now the transposed" << ::std::endl;
-////  ::std::cout << data.dataTransposed[1][1] << ::std::endl;
-////   ::std::cout << data.dataTransposed[1][3] << ::std::endl;
-////   ::std::cout << data.dataTransposed[2][3] << ::std::endl;
-//
-  for(::std::vector< ::std::string>::iterator it = data.nodes.begin(); it != data.nodes.end(); ++it)
-    ::std::cout << *it << ::std::endl;
 
   data.printIndexMap();
 }

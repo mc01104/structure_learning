@@ -1,8 +1,8 @@
-/*
+/**
  * Dataset.h
  *
- *  Created on: 22 Feb 2013
- *      Author: george
+ *@date
+ *@author george
  */
 
 #ifndef DATASET_H_
@@ -11,24 +11,48 @@
 #include "ADTree.h"
 #include "Discretizer.h"
 #include <map>
+#include <vector>
 
 namespace data
 {
-
+	  /**
+	   * @brief This class is used to store the data samples in a matrix representation
+	   * @details This class is used to store the data samples. A Discretizer is applied on the data after loading them from a text file.
+ 	   * An AD-Tree is built to ensure efficient querying of the dataset. This is later used for computing sufficient statistics
+	   * @author Georgios Fagogenis
+	   * @date 2013/11/01
+	   */
       class Dataset
       {
               public:
+    	  	  	  	  /**
+    	  	  	  	   * This is the constructor for the Dataset class
+    	  	  	  	   * @param inputFile string variable holding the full path to the data file
+    	  	  	  	   */
                       Dataset(const ::std::string& inputFile);
 
+                      /**
+                       * Class destructor
+                       */
                       virtual ~Dataset();
 
+                      /**
+                       * This function is used to set the discretization algorithm
+                       * @param algorithm discretization algorithm
+                       */
                       void setDiscretizationAlgorithm(Discretizer* algorithm) {this->discretizer = algorithm;};
 
+                      /**
+                       * This function is used to count the instances that match a specific query in the dataset
+                       * @param query vector of parameter-value std::pairs. Parameters are strings, values are integers
+                       * @return integer number of occurrences of the input query within the dataset
+                       */
                       int count(const QueryItem& query);
 
-                      //this has to be private ->who uses it?
-                      void computeTransposeData();
-
+                      /**
+                       * prints the index, the arity and the most common value for each column (node) of the dataset.
+                       * Mainly for debugging
+                       */
                       void printIndexMap();
 
               private:
@@ -43,9 +67,11 @@ namespace data
 
                       void buildADTree();
 
+                      void computeTransposeData();
+
               public:
-                      //make private and write getters
-                       //use different data container to avoid unnecessary copies of the data
+                      //TODO make private and write getters
+                      //TODO different data container to avoid unnecessary copies of the data
                       ::std::vector< ::std::vector<double> > data;
 
                       ::std::vector< ::std::vector<double> > dataTransposed;
@@ -58,7 +84,7 @@ namespace data
 
                       ::std::map< ::std::string, int*> index;
 
-              public:
+              private:
 
                       int numberOfRecords;
 
