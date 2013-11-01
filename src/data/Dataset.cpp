@@ -10,7 +10,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <set>
 #include <algorithm>
 
 #include "BasicDiscretizer.h"
@@ -37,6 +36,8 @@ Dataset::Dataset(const ::std::string& inputFile) :
 	this->buildADTree();
 
 	this->adtree.printTree();
+
+	this->printData();
 
 }
 
@@ -139,6 +140,9 @@ Dataset::computeArity(int indCol)
 
 		tmp.insert(value);
 	}
+
+	this->valueMap[this->nodes[indCol]] = ::std::vector<int> (tmp.begin(),tmp.end());
+
 	return tmp.size();
 }
 
@@ -199,3 +203,18 @@ void test_dataset(const ::std::string& filename)
 
   data.printIndexMap();
 }
+
+void
+Dataset::printData()
+{
+
+	for(int i = 0; i < this->numberOfRecords; ++i)
+	{
+		for(::std::vector<int>::iterator it = this->dataDiscrete[i].begin(); it != this->dataDiscrete[i].end(); ++it)
+			::std::cout << *it << " ";
+
+		::std::cout << ::std::endl;
+	}
+
+}
+

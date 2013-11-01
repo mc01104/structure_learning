@@ -12,6 +12,7 @@
 #include "Discretizer.h"
 #include <map>
 #include <vector>
+#include <set>
 
 namespace data
 {
@@ -71,6 +72,8 @@ namespace data
 
                       void computeTransposeData();
 
+                      void printData();
+
               public:
                       //TODO make private and write getters
                       //TODO different data container to avoid unnecessary copies of the data
@@ -85,6 +88,8 @@ namespace data
                       ::std::vector< ::std::string> nodes;
 
                       ::std::map< ::std::string, int*> index;
+
+                      ::std::map< ::std::string, ::std::vector<int> > valueMap;
 
               private:
 

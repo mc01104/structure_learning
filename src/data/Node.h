@@ -40,7 +40,7 @@ namespace data
 
                     Node* getParent();
 
-                    virtual void buildStructure( ::std::map< ::std::string, int*> index) = 0;
+                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap) = 0;
 
                     virtual void insertRecord( const::std::vector< int>& record) = 0;
 
@@ -87,11 +87,13 @@ namespace data
 
                     virtual Node* addNextNode(Node* n);
 
-                    virtual void buildStructure( ::std::map< ::std::string, int*> index);
+                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
 
                     virtual bool isRoot();
+
+                    virtual void print();
 
                     void setIndex(int index) {this->index = index;};
 
@@ -118,7 +120,7 @@ namespace data
 
                     virtual Node* addNextNode(Node* n);
 
-                    virtual void buildStructure(::std::map< ::std::string, int*> index);
+                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
 

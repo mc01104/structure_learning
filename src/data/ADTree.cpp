@@ -30,7 +30,7 @@ ADTree::initialize(Dataset* data)
 
 	this->buildStructure();
 
-	//this->computeCounts();
+	this->computeCounts();
 
 }
 
@@ -43,7 +43,7 @@ ADTree::count(const QueryItem& query)
 void
 ADTree::buildStructure()
 {
-       this->rootNode->buildStructure(data->index);
+       this->rootNode->buildStructure(data->index, data->valueMap);
 }
 
 

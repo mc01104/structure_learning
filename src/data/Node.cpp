@@ -156,7 +156,7 @@ ADRootNode::isRoot()
 }
 
 void
-ADNode::buildStructure(std::map< ::std::string, int*> index)
+ADNode::buildStructure(std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap)
 {
 	if (this->name == "NULL") return;
 
@@ -171,7 +171,7 @@ ADNode::buildStructure(std::map< ::std::string, int*> index)
 
     for (::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
     {
-    	(*it)->buildStructure(tmp);
+    	(*it)->buildStructure(tmp, valueMap);
 
     	tmp.erase(tmp.begin());
     }
@@ -180,15 +180,16 @@ ADNode::buildStructure(std::map< ::std::string, int*> index)
 void
 ADNode::insertRecord(const std::vector<int>& record)
 {
-  for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
-    {
-      if(record[this->index] == this->value)
-        this->incrementCounter();
+	if (this->getName() == "NULL") return;
 
-      (*it)->insertRecord(record);
-    }
+    if(record[this->index] == this->value)
+    	this->incrementCounter();
+    else
+    	return;
 
-  //return;
+	for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
+       (*it)->insertRecord(record);
+
 }
 
 bool
@@ -198,7 +199,7 @@ ADNode::isRoot()
 }
 
 void
-VaryNode::buildStructure(std::map<std::string, int*> index)
+VaryNode::buildStructure(std::map<std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap)
 {
     ::std::map< ::std::string, int*> tmp = index;
 
@@ -214,15 +215,17 @@ VaryNode::buildStructure(std::map<std::string, int*> index)
       {
         n = this->addNextNode(new ADNode());
 
-        if( i != MCV)
+        int value = valueMap[this->name][i];
+
+        if(value != MCV)
           {
             ::std::stringstream ss;
 
-            ss << i;
+            ss << value;
 
             n->setName(ss.str());
 
-            reinterpret_cast< ADNode*>(n)->setValue(i);
+            reinterpret_cast< ADNode*>(n)->setValue(value);
 
             reinterpret_cast< ADNode*>(n)->setIndex(ADIndex);
           }
@@ -234,7 +237,7 @@ VaryNode::buildStructure(std::map<std::string, int*> index)
     tmp.erase(tmp.begin());
 
     for (::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
-    	(*it)->buildStructure(tmp);
+    	(*it)->buildStructure(tmp, valueMap);
 
 
 }
@@ -245,7 +248,6 @@ VaryNode::insertRecord(const std::vector<int>& record)
     for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
       (*it)->insertRecord(record);
 
-    //return;
 }
 
 bool
@@ -260,13 +262,20 @@ ADRootNode::insertRecord(const std::vector<int>& record)
   for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
     (*it)->insertRecord(record);
 
-  //return;
 }
 
 void
 ADNode::incrementCounter()
 {
   this->count++;
+}
+
+void
+ADNode::print()
+{
+	::std::cout << "node counter:" << this->getCount() << ::std::endl;
+
+	::Node::print();
 }
 
 void
