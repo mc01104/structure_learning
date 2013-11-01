@@ -34,7 +34,9 @@ Dataset::Dataset(const ::std::string& inputFile) :
 
 	this->buildIndexMap();
 
-	//this->buildADTree();
+	this->buildADTree();
+
+	this->adtree.printTree();
 
 }
 

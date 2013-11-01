@@ -26,9 +26,11 @@ ADTree::initialize(Dataset* data)
 {
 	this->data = data;
 
+	this->indexMap = data->index;
+
 	this->buildStructure();
 
-	this->computeCounts();
+	//this->computeCounts();
 
 }
 
@@ -56,6 +58,12 @@ void
 data::ADTree::insertRecord(std::vector<int> record)
 {
      this->rootNode->insertRecord(record);
+}
+
+void
+data::ADTree::printTree()
+{
+	this->rootNode->print();
 }
 
 void

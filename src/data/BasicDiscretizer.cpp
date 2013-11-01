@@ -32,7 +32,7 @@ BasicDiscretizer::run(Dataset& data)
 	for(size_t i = 0; i < data.nodes.size(); ++i)
 		this->columnDiscretizer(data,i);
 
-        for(int j = 0; j < data.numberOfRecords; ++j)
+        for(int j = 0; j < data.getNumberOfRecords(); ++j)
         {
                 ::std::vector< int> tmp;
                 for(size_t i = 0; i < data.nodes.size(); ++i)

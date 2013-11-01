@@ -9,6 +9,7 @@
 #include "Node.h"
 
 #include <sstream>
+#include <iostream>
 
 using namespace data;
 
@@ -37,13 +38,13 @@ Node::setParent(Node* n)
 	this->prev = n;
 }
 
-const std::string&
+std::string
 Node::getName()
 {
 	return this->name;
 }
 
-const std::vector<Node*>&
+std::vector<Node*>&
 Node::getChildren()
 {
 	return this->children;
@@ -119,7 +120,7 @@ ADNode::ADNode(ADNode* n):
 Node*
 ADNode::addNextNode(Node* n)
 {
-	Node* newNode = new VaryNode( reinterpret_cast< VaryNode*>(n));
+	Node* newNode = new VaryNode();
 
 	return Node::addNextNode(newNode);
 }
@@ -143,7 +144,7 @@ VaryNode::VaryNode(VaryNode* n):
 Node*
 VaryNode::addNextNode(Node* n)
 {
-	Node* newNode = new ADNode( reinterpret_cast< ADNode* > (n));
+	Node* newNode = new ADNode();
 
 	return Node::addNextNode(newNode);
 }
@@ -155,8 +156,10 @@ ADRootNode::isRoot()
 }
 
 void
-data::ADNode::buildStructure(std::map< ::std::string, int*> index)
+ADNode::buildStructure(std::map< ::std::string, int*> index)
 {
+	if (this->name == "NULL") return;
+
     ::std::map< ::std::string, int*> tmp = index;
 
     for(::std::map< ::std::string, int* >::iterator it = tmp.begin(); it != tmp.end(); it++)
@@ -164,18 +167,24 @@ data::ADNode::buildStructure(std::map< ::std::string, int*> index)
         Node* n = this->addNextNode(new VaryNode());
 
         n->setName(it->first);
-
-        return n->buildStructure(tmp);
       }
+
+    for (::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
+    {
+    	(*it)->buildStructure(tmp);
+
+    	tmp.erase(tmp.begin());
+    }
 }
 
 void
-data::ADNode::insertRecord(const std::vector<int>& record)
+ADNode::insertRecord(const std::vector<int>& record)
 {
   for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
     {
       if(record[this->index] == this->value)
         this->incrementCounter();
+
       (*it)->insertRecord(record);
     }
 
@@ -203,10 +212,9 @@ VaryNode::buildStructure(std::map<std::string, int*> index)
 
     for(int i = 0; i < arity; i++)
       {
-
         n = this->addNextNode(new ADNode());
 
-        if( arity != MCV)
+        if( i != MCV)
           {
             ::std::stringstream ss;
 
@@ -217,16 +225,18 @@ VaryNode::buildStructure(std::map<std::string, int*> index)
             reinterpret_cast< ADNode*>(n)->setValue(i);
 
             reinterpret_cast< ADNode*>(n)->setIndex(ADIndex);
-
-            tmp.erase(tmp.begin());
-
-           return n->buildStructure(tmp);
           }
+
         else
-          {
             n->setName("NULL");
-          }
       }
+
+    tmp.erase(tmp.begin());
+
+    for (::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
+    	(*it)->buildStructure(tmp);
+
+
 }
 
 void
@@ -258,6 +268,16 @@ ADNode::incrementCounter()
 {
   this->count++;
 }
+
+void
+Node::print()
+{
+	::std::cout << this->getName() << ::std::endl;
+	for(::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
+		(*it)->print();
+
+}
+
 
 
 

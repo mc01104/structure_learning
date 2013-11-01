@@ -32,17 +32,19 @@ namespace data
 
                     void setParent(Node* n);
 
-                    const ::std::string& getName();
+                    ::std::string getName();
 
                     virtual Node* addNextNode(Node* n);
 
-                    virtual const ::std::vector<Node* >& getChildren();
+                    virtual ::std::vector<Node* >& getChildren();
 
                     Node* getParent();
 
                     virtual void buildStructure( ::std::map< ::std::string, int*> index) = 0;
 
                     virtual void insertRecord( const::std::vector< int>& record) = 0;
+
+                    virtual void print();
 
                     //void destroyStructure(Node* n);
 

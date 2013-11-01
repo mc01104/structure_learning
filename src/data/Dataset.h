@@ -55,6 +55,8 @@ namespace data
                        */
                       void printIndexMap();
 
+                      int getNumberOfRecords() { return this->numberOfRecords;};
+
               private:
 
                       void loadData();

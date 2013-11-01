@@ -30,6 +30,8 @@ namespace data
 
                       Dataset* data;
 
+                      ::std::map< ::std::string, int*> indexMap;
+
               public:
 
                       void initialize(Dataset* data);
@@ -37,6 +39,8 @@ namespace data
                       int count(const QueryItem& query);
 
                       void insertRecord(::std::vector<int> record);
+
+                      void printTree();
 
               private:
 
