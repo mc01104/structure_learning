@@ -50,6 +50,8 @@ namespace data
 
                       void computeCounts();
 
+                      int ADCount(ADNode* node, const QueryItem& query, int index = 0);
+
       };
 }
 #endif /* ADTREE_H_ */

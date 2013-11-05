@@ -40,13 +40,13 @@ namespace data
 
                     Node* getParent();
 
+                    ::std::vector< Node* > getSiblings();
+
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap) = 0;
 
                     virtual void insertRecord( const::std::vector< int>& record) = 0;
 
                     virtual void print();
-
-                    virtual int computeCount(const QueryItem& query) = 0;
 
                     //void destroyStructure(Node* n);
 
@@ -77,7 +77,7 @@ namespace data
 
                     ADNode(ADNode* n);
 
-                    ~ADNode();
+                    virtual ~ADNode();
 
                     void setCount(int count);
 
@@ -92,8 +92,6 @@ namespace data
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
-
-                    virtual int computeCount(const QueryItem& query);
 
                     virtual bool isRoot();
 
@@ -120,15 +118,13 @@ namespace data
 
                     VaryNode(VaryNode* n);
 
-                    ~VaryNode();
+                    virtual ~VaryNode();
 
                     virtual Node* addNextNode(Node* n);
 
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
-
-                    virtual int computeCount(const QueryItem& query);
 
                     virtual bool isRoot();
 
@@ -142,6 +138,8 @@ namespace data
                     virtual bool isRoot();
 
                     virtual void insertRecord( const ::std::vector< int>& record );
+
+                    //virtual int computeCount(const QueryItem& query);
     };
 }
 #endif /* NODE_H_ */

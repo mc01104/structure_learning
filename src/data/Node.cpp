@@ -250,12 +250,6 @@ VaryNode::insertRecord(const std::vector<int>& record)
 
 }
 
-int
-VaryNode::computeCount(const QueryItem& query)
-{
-	return 0;
-}
-
 bool
 VaryNode::isRoot()
 {
@@ -268,12 +262,6 @@ ADRootNode::insertRecord(const std::vector<int>& record)
   for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
     (*it)->insertRecord(record);
 
-}
-
-int
-ADNode::computeCount(const QueryItem& query)
-{
-	return 0;
 }
 
 void
@@ -290,6 +278,26 @@ ADNode::print()
 	::Node::print();
 }
 
+::std::vector<Node* >
+ Node::getSiblings()
+{
+	if (this->isRoot() || this->getParent()->isRoot()) return ::std::vector<Node*> ();
+
+	Node* parent = this->getParent();
+
+	::std::vector<Node* > tmp = parent->getChildren();
+
+	for (::std::vector< Node* >::iterator it = tmp.begin(); it != tmp.end();)
+	{
+		if (*it == this)
+			tmp.erase(it);
+		else
+			++it;
+	}
+
+	return tmp;
+}
+
 void
 Node::print()
 {
@@ -298,6 +306,8 @@ Node::print()
 		(*it)->print();
 
 }
+
+
 
 
 
