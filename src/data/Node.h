@@ -46,6 +46,8 @@ namespace data
 
                     virtual void print();
 
+                    virtual int computeCount(const QueryItem& query) = 0;
+
                     //void destroyStructure(Node* n);
 
             protected:
@@ -91,6 +93,8 @@ namespace data
 
                     virtual void insertRecord( const ::std::vector< int>& record);
 
+                    virtual int computeCount(const QueryItem& query);
+
                     virtual bool isRoot();
 
                     virtual void print();
@@ -123,6 +127,8 @@ namespace data
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
+
+                    virtual int computeCount(const QueryItem& query);
 
                     virtual bool isRoot();
 

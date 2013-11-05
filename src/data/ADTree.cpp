@@ -37,7 +37,7 @@ ADTree::initialize(Dataset* data)
 int
 ADTree::count(const QueryItem& query)
 {
-	return 1;
+	return this->rootNode->computeCount(query);
 }
 
 void
