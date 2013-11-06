@@ -85,7 +85,6 @@ Node::getParent()
 
 ADNode::ADNode() :
 		Node(),
-		query(),
 		count(0)
 {
 }
@@ -105,24 +104,15 @@ ADNode::getCount()
 	return this->count;
 }
 
-void
-ADNode::setQuery(const QueryItem& query)
-{
-	this->query = query;
-}
-
-const QueryItem&
-ADNode::getQuery()
-{
-	return this->query;
-}
 
 ADNode::ADNode(ADNode* n):
     Node(n)
 {
-    this->query = n->getQuery();
+	this->index = n->getIndex();
 
     this->count = n->getCount();
+
+	this->value = n->getValue();
 }
 
 Node*
@@ -164,7 +154,7 @@ ADRootNode::isRoot()
 }
 
 void
-ADNode::buildStructure(std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap)
+ADNode::buildStructure(const ::std::map< ::std::string, int*>& index, const ::std::map< ::std::string, ::std::vector<int> >& valueMap)
 {
 	if (this->name == "NULL") return;
 
@@ -207,23 +197,22 @@ ADNode::isRoot()
 }
 
 void
-VaryNode::buildStructure(std::map<std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap)
+VaryNode::buildStructure(const ::std::map< ::std::string, int*>& index, const ::std::map< ::std::string, ::std::vector<int> >& valueMap)
 {
     ::std::map< ::std::string, int*> tmp = index;
 
-    int arity = index[this->name][1];
+    int arity = index.at(this->name)[1];
 
-    int MCV = index[this->name][2];
+    int MCV = index.at(this->name)[2];
 
-    int ADIndex = index[this->getName()][0];
+    int ADIndex = index.at(this->getName())[0];
 
     Node* n;
-
     for(int i = 0; i < arity; i++)
       {
         n = this->addNextNode(new ADNode());
 
-        int value = valueMap[this->name][i];
+        int value = valueMap.at(this->name)[i];
 
         if(value != MCV)
           {
@@ -303,48 +292,3 @@ Node::print()
 		(*it)->print();
 
 }
-
-
-void
-Node::updateSiblings()
-{
-	::std::cout << "general node -> update Siblings" << ::std::endl;
-	this->findSiblings();
-	for(::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
-		(*it)->findSiblings();
-}
-
-void
-Node::findSiblings()
-{
-
-	Node* parent = this->getParent();
-
-	if (parent->isRoot()) return;
-
-	::std::vector<Node* > tmp = parent->getChildren();
-
-	for (::std::vector< Node* >::iterator it = tmp.begin(); it != tmp.end(); ++it)
-	{
-		if (*it == this)
-			continue;
-		else
-			this->siblings.push_back(*it);
-	}
-
-}
-
-void ADRootNode::updateSiblings()
-{
-	::std::cout << "ROOT update siblings" << ::std::endl;
-	Node::updateSiblings();
-
-}
-
-
-
-
-
-
-
-

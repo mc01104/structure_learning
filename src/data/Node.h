@@ -42,15 +42,11 @@ namespace data
 
                     ::std::vector< Node* >& getSiblings();
 
-                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap) = 0;
+                    virtual void buildStructure(const ::std::map< ::std::string, int*>& index, const ::std::map< ::std::string, ::std::vector<int> >& valueMap) = 0;
 
                     virtual void insertRecord( const::std::vector< int>& record) = 0;
 
                     virtual void print();
-
-                    virtual void updateSiblings();
-
-                    //void destroyStructure(Node* n);
 
             protected:
 
@@ -62,17 +58,11 @@ namespace data
 
                     Node* prev;
 
-            protected:
-
-                    void findSiblings();
-
     };
 
 
     class ADNode : public Node
     {
-                    QueryItem query;
-
                     int count;
 
                     int index;
@@ -91,15 +81,9 @@ namespace data
 
                     int getCount();
 
-                    void setQuery(const QueryItem& query);
-
-                    const QueryItem& getQuery();
-
                     virtual Node* addNextNode(Node* n);
 
-                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
-
-                    //virtual void updateSiblings();
+                    virtual void buildStructure(const ::std::map< ::std::string, int*>& index, const ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
 
@@ -132,7 +116,7 @@ namespace data
 
                     virtual Node* addNextNode(Node* n);
 
-                    virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
+                    virtual void buildStructure(const ::std::map< ::std::string, int*>& index, const ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
                     virtual void insertRecord( const ::std::vector< int>& record);
 
@@ -149,9 +133,6 @@ namespace data
 
                     virtual void insertRecord( const ::std::vector< int>& record );
 
-                    virtual void updateSiblings();
-
-                    //virtual int computeCount(const QueryItem& query);
     };
 }
 #endif /* NODE_H_ */

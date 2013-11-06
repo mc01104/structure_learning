@@ -26,7 +26,7 @@ ADTree::initialize(Dataset* data)
 {
 	this->data = data;
 
-	this->indexMap = data->index;
+	this->indexMap = data->getIndex();
 
 	this->buildStructure();
 
@@ -86,13 +86,10 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 	if (nextADNode->getName() == "NULL")
 	{
 		int count = this->ADCount(currentADNode, query,index + 1);
-		::std::cout << "total:" << count << ::std::endl;
-		//::std::cout << "number of siblings:" << nextADNode->getSiblings().size() << ::std::endl;
+
 		for(::std::vector< Node*>::iterator it = nextADNode->getSiblings().begin(); it != nextADNode->getSiblings().end(); ++it)
-		{
-			//::std::cout << "sibling:" << (*it)->getName() << ::std::endl;
 			count -= this->ADCount(reinterpret_cast< ADNode* >(*it), query, index + 1);
-		}
+
 		return  count;
 	}
 
@@ -107,14 +104,14 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 void
 ADTree::buildStructure()
 {
-       this->rootNode->buildStructure(data->index, data->valueMap);
+       this->rootNode->buildStructure(data->getIndex(), data->getValueMap());
 }
 
 
 void
 ADTree::destroyStructure()
 {
-      delete rootNode;
+	delete this->rootNode;
 }
 
 
@@ -133,7 +130,7 @@ data::ADTree::printTree()
 void
 ADTree::computeCounts()
 {
-  for(::std::vector< ::std::vector< int> >::iterator it = this->data->dataDiscrete.begin(); it != this->data->dataDiscrete.end(); it++)
+  for(::std::vector< ::std::vector< int> >::const_iterator it = this->data->getDataDiscrete().begin(); it != this->data->getDataDiscrete().end(); it++)
     this->insertRecord(*it);
 }
 

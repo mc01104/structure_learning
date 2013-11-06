@@ -75,8 +75,22 @@ namespace data
                       void printData();
 
               public:
-                      //TODO make private and write getters
-                      //TODO different data container to avoid unnecessary copies of the data
+
+                      const ::std::map< ::std::string, int*>& getIndex() {return this->index;};
+
+                      const ::std::map< ::std::string, ::std::vector<int> >& getValueMap() {return this->valueMap;};
+
+                      ::std::vector< ::std::vector<int> >& getDataDiscrete() {return this->dataDiscrete;};
+
+                      ::std::vector< ::std::vector<int> >& getDataTransposedDiscrete() {return this->dataTransposedDiscrete;};
+
+                      ::std::vector< ::std::vector<double> >& getData() {return this->data;};
+
+                      ::std::vector< ::std::vector<double> >& getDataTransposed() {return this->dataTransposed;};
+
+                      const ::std::vector< ::std::string>& getNodes() {return this->nodes;};
+
+              private:
                       ::std::vector< ::std::vector<double> > data;
 
                       ::std::vector< ::std::vector<double> > dataTransposed;
@@ -91,7 +105,6 @@ namespace data
 
                       ::std::map< ::std::string, ::std::vector<int> > valueMap;
 
-              private:
 
                       int numberOfRecords;
 

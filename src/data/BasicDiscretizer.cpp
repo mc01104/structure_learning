@@ -27,18 +27,18 @@ void
 BasicDiscretizer::run(Dataset& data)
 {
 
-	data.dataTransposedDiscrete.resize(data.nodes.size());
+	data.getDataTransposedDiscrete().resize(data.getNodes().size());
 
-	for(size_t i = 0; i < data.nodes.size(); ++i)
+	for(size_t i = 0; i < data.getNodes().size(); ++i)
 		this->columnDiscretizer(data,i);
 
         for(int j = 0; j < data.getNumberOfRecords(); ++j)
         {
                 ::std::vector< int> tmp;
-                for(size_t i = 0; i < data.nodes.size(); ++i)
-                        tmp.push_back(data.dataTransposedDiscrete[i][j]);
+                for(size_t i = 0; i < data.getNodes().size(); ++i)
+                        tmp.push_back(data.getDataTransposedDiscrete()[i][j]);
 
-                data.dataDiscrete.push_back(tmp);
+                data.getDataDiscrete().push_back(tmp);
         }
 
 }
@@ -46,7 +46,7 @@ BasicDiscretizer::run(Dataset& data)
 void
 BasicDiscretizer::columnDiscretizer(Dataset& data,int column, int numOfBins)
 {
-	::std::vector<double> tmp = data.dataTransposed[column];
+	::std::vector<double> tmp = data.getDataTransposed()[column];
 
 	::std::vector<int> tmpDiscrete(tmp.size());
 
@@ -58,7 +58,7 @@ BasicDiscretizer::columnDiscretizer(Dataset& data,int column, int numOfBins)
 	for(size_t i = 0; i < tmp.size(); ++i)
 		tmpDiscrete[i] = this->binValue(tmp[i],min,binSize);
 
-	data.dataTransposedDiscrete[column] = tmpDiscrete;
+	data.getDataTransposedDiscrete()[column] = tmpDiscrete;
 
 }
 
