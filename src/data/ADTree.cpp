@@ -50,24 +50,57 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 	VaryNode* varyNode;
 	for (::std::vector<Node* >::iterator it = currentADNode->getChildren().begin(); it != currentADNode->getChildren().end(); ++it)
 		if ((*it)->getName() == query[index].first)
+		{
 			varyNode = reinterpret_cast< VaryNode* >(*it);
+			break;
+		}
 
 	ADNode* nextADNode;
-	for(::std::vector<Node* >::iterator it = varyNode->getChildren().begin(); it != varyNode->getChildren().end(); ++it)
-		if (reinterpret_cast< ADNode* >(*it)->getValue() == query[index].second)
-			nextADNode =  reinterpret_cast< ADNode* > (*it);
+	if (this->indexMap[query[index].first][2] == query[index].second)
+	{
+		for(::std::vector<Node* >::iterator it = varyNode->getChildren().begin(); it != varyNode->getChildren().end(); ++it)
+		{
+			if ((*it)->getName() == "NULL")
+			{
+				nextADNode =  reinterpret_cast< ADNode* > (*it);
+				break;
+			}
+		}
 
-	if (nextADNode->getCount() == 0) return 0;
+	}
+	else
+	{
+		for(::std::vector<Node* >::iterator it = varyNode->getChildren().begin(); it != varyNode->getChildren().end(); ++it)
+		{
+
+			if (reinterpret_cast< ADNode* >(*it)->getValue() == query[index].second)
+			{
+				nextADNode =  reinterpret_cast< ADNode* > (*it);
+				break;
+			}
+		}
+
+	}
+
 
 	if (nextADNode->getName() == "NULL")
 	{
 		int count = this->ADCount(currentADNode, query,index + 1);
+		::std::cout << "total:" << count << ::std::endl;
+		//::std::cout << "number of siblings:" << nextADNode->getSiblings().size() << ::std::endl;
 		for(::std::vector< Node*>::iterator it = nextADNode->getSiblings().begin(); it != nextADNode->getSiblings().end(); ++it)
+		{
+			//::std::cout << "sibling:" << (*it)->getName() << ::std::endl;
 			count -= this->ADCount(reinterpret_cast< ADNode* >(*it), query, index + 1);
+		}
 		return  count;
 	}
 
-	return 0;
+	if (nextADNode->getCount() == 0) return 0;
+
+	return this->ADCount(nextADNode,query,index + 1);
+
+
 
 }
 

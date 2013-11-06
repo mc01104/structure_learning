@@ -40,7 +40,7 @@ namespace data
 
                     Node* getParent();
 
-                    ::std::vector< Node* > getSiblings();
+                    ::std::vector< Node* >& getSiblings();
 
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap) = 0;
 
@@ -48,15 +48,23 @@ namespace data
 
                     virtual void print();
 
+                    virtual void updateSiblings();
+
                     //void destroyStructure(Node* n);
 
             protected:
 
                     ::std::vector< Node*> children;
 
+                    ::std::vector< Node*> siblings;
+
                     ::std::string name;
 
                     Node* prev;
+
+            protected:
+
+                    void findSiblings();
 
     };
 
@@ -91,6 +99,8 @@ namespace data
 
                     virtual void buildStructure( ::std::map< ::std::string, int*> index, ::std::map< ::std::string, ::std::vector<int> >& valueMap);
 
+                    //virtual void updateSiblings();
+
                     virtual void insertRecord( const ::std::vector< int>& record);
 
                     virtual bool isRoot();
@@ -105,8 +115,8 @@ namespace data
 
                     int getValue() {return this->value;};
 
-            private:
-                     void incrementCounter();
+            protected:
+                    void incrementCounter();
     };
 
 
@@ -138,6 +148,8 @@ namespace data
                     virtual bool isRoot();
 
                     virtual void insertRecord( const ::std::vector< int>& record );
+
+                    virtual void updateSiblings();
 
                     //virtual int computeCount(const QueryItem& query);
     };

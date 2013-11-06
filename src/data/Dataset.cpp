@@ -35,7 +35,7 @@ Dataset::Dataset(const ::std::string& inputFile) :
 
 	this->buildADTree();
 
-	this->adtree.printTree();
+	//this->adtree.printTree();
 
 	this->printData();
 
@@ -202,6 +202,11 @@ void test_dataset(const ::std::string& filename)
   Dataset data(filename);
 
   data.printIndexMap();
+
+  QueryItem query;
+//  query.push_back(::std::pair< ::std::string, int>("george",2));
+  query.push_back(::std::pair< ::std::string, int>("mpampis",0));
+  ::std::cout << "counts:" << data.count(query) << ::std::endl;
 }
 
 void

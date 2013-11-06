@@ -15,7 +15,7 @@ using namespace data;
 
 Node::Node() :
 	children(),
-	name(),
+	name("g"),
 	prev()
 {
 }
@@ -55,6 +55,12 @@ Node::addNextNode(Node* n)
 {
 	n->setParent(this);
 
+	for (::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); ++it)
+	{
+		(*it)->getSiblings().push_back(n);
+		n->getSiblings().push_back((*it));
+	}
+
 	this->children.push_back(n);
 
 	return n;
@@ -63,6 +69,8 @@ Node::addNextNode(Node* n)
 Node::Node(Node* n)
 {
        this->children = n->getChildren();
+
+       this->siblings = n->getSiblings();
 
        this->name = n->getName();
 
@@ -259,6 +267,8 @@ VaryNode::isRoot()
 void
 ADRootNode::insertRecord(const std::vector<int>& record)
 {
+  ADNode::incrementCounter();
+
   for(::std::vector< Node*>::iterator it = this->children.begin(); it != this->children.end(); it++)
     (*it)->insertRecord(record);
 
@@ -278,24 +288,11 @@ ADNode::print()
 	::Node::print();
 }
 
-::std::vector<Node* >
+::std::vector<Node* >&
  Node::getSiblings()
 {
-	if (this->isRoot() || this->getParent()->isRoot()) return ::std::vector<Node*> ();
+	return this->siblings;
 
-	Node* parent = this->getParent();
-
-	::std::vector<Node* > tmp = parent->getChildren();
-
-	for (::std::vector< Node* >::iterator it = tmp.begin(); it != tmp.end();)
-	{
-		if (*it == this)
-			tmp.erase(it);
-		else
-			++it;
-	}
-
-	return tmp;
 }
 
 void
@@ -308,6 +305,41 @@ Node::print()
 }
 
 
+void
+Node::updateSiblings()
+{
+	::std::cout << "general node -> update Siblings" << ::std::endl;
+	this->findSiblings();
+	for(::std::vector<Node* >::iterator it = this->getChildren().begin(); it != this->getChildren().end(); ++it)
+		(*it)->findSiblings();
+}
+
+void
+Node::findSiblings()
+{
+
+	Node* parent = this->getParent();
+
+	if (parent->isRoot()) return;
+
+	::std::vector<Node* > tmp = parent->getChildren();
+
+	for (::std::vector< Node* >::iterator it = tmp.begin(); it != tmp.end(); ++it)
+	{
+		if (*it == this)
+			continue;
+		else
+			this->siblings.push_back(*it);
+	}
+
+}
+
+void ADRootNode::updateSiblings()
+{
+	::std::cout << "ROOT update siblings" << ::std::endl;
+	Node::updateSiblings();
+
+}
 
 
 
