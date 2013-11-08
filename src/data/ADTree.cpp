@@ -55,6 +55,8 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 			break;
 		}
 
+	if (varyNode == NULL) return 0;
+
 	ADNode* nextADNode;
 	if (this->indexMap[query[index].first][2] == query[index].second)
 	{
@@ -82,6 +84,7 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 
 	}
 
+	if (nextADNode == NULL) return 0;
 
 	if (nextADNode->getName() == "NULL")
 	{

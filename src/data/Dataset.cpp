@@ -205,7 +205,7 @@ void test_dataset(const ::std::string& filename)
 
   QueryItem query;
 //  query.push_back(::std::pair< ::std::string, int>("george",2));
-  query.push_back(::std::pair< ::std::string, int>("mpampis",0));
+  query.push_back(::std::pair< ::std::string, int>("mpampis",5));
   ::std::cout << "counts:" << data.count(query) << ::std::endl;
 }
 
