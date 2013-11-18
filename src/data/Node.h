@@ -8,8 +8,9 @@
 #ifndef NODE_H_
 #define NODE_H_
 
-#include <vector>
 #include <string>
+
+#include <vector>
 #include <map>
 
 typedef ::std::vector< ::std::pair< ::std::string, int> > QueryItem;

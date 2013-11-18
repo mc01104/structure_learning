@@ -86,6 +86,8 @@ class Network
 
 		::std::vector < ::std::string> getVertexList();
 
+		//::std::vector < ::std::string> getVertexList() ;
+
 		int getDegree() const {return this->degree;};
 
 		void setEdgeProperties(const Edge& e, const EdgeBundle& props);
@@ -96,9 +98,11 @@ class Network
 
 		const EdgeBundle& getEdgeProperties(const Edge& e) const;
 
-		std::vector< ::std::string> getParents(const Vertex& v);
+		std::vector< ::std::string> getParents(const Vertex& v) ;
 
-		std::vector< ::std::string> getParents(const ::std::string& vertexName);
+		//std::vector< ::std::string> getParents(const ::std::string& vertexName);
+
+		std::vector< ::std::string> getParents(const ::std::string& vertexName) ;
 
 		void setRequiredEdges( const EdgeVector& edges);
 

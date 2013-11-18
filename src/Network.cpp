@@ -463,6 +463,8 @@ Network::getVertexList()
 	return vertexList;
 }
 
+
+
 void
 Network::addRandomEdge(float probability)
 {

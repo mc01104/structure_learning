@@ -8,11 +8,12 @@
 #ifndef DATASET_H_
 #define DATASET_H_
 
-#include "ADTree.h"
-#include "Discretizer.h"
 #include <map>
 #include <vector>
 #include <set>
+
+#include "ADTree.h"
+#include "Discretizer.h"
 
 namespace data
 {

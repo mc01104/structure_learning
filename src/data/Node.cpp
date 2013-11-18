@@ -5,11 +5,10 @@
  *      Author: george
  */
 
-
-#include "Node.h"
-
 #include <sstream>
 #include <iostream>
+
+#include "Node.h"
 
 using namespace data;
 

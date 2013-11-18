@@ -46,4 +46,6 @@ typedef ::std::vector< EdgePair> EdgeVector;
 
 typedef ::std::vector< ::std::string> NodeOrdering;
 
+typedef ::std::pair< ::std::string, ::std::vector< ::std::string> > SubGraph;
+
 #endif /* NETWORKDEFS_H_ */

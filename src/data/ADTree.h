@@ -8,9 +8,10 @@
 #ifndef ADTREE_H_
 #define ADTREE_H_
 
+#include <iostream>
+
 #include <vector>
 #include <string>
-#include <iostream>
 
 #include "Node.h"
 

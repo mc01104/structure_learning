@@ -5,8 +5,8 @@
  *      Author: george
  */
 
-#include "ADTree.h"
 #include "Dataset.h"
+#include "ADTree.h"
 
 using namespace data;
 
@@ -61,27 +61,20 @@ ADTree::ADCount(ADNode* node, const QueryItem& query, int index)
 	if (this->indexMap[query[index].first][2] == query[index].second)
 	{
 		for(::std::vector<Node* >::iterator it = varyNode->getChildren().begin(); it != varyNode->getChildren().end(); ++it)
-		{
 			if ((*it)->getName() == "NULL")
 			{
 				nextADNode =  reinterpret_cast< ADNode* > (*it);
 				break;
 			}
-		}
-
 	}
 	else
 	{
 		for(::std::vector<Node* >::iterator it = varyNode->getChildren().begin(); it != varyNode->getChildren().end(); ++it)
-		{
-
 			if (reinterpret_cast< ADNode* >(*it)->getValue() == query[index].second)
 			{
 				nextADNode =  reinterpret_cast< ADNode* > (*it);
 				break;
 			}
-		}
-
 	}
 
 	if (nextADNode == NULL) return 0;

@@ -5,13 +5,15 @@
  *      Author: george
  */
 
-#include "Dataset.h"
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
+
+#include <string>
+
 #include <algorithm>
 
+#include "Dataset.h"
 #include "BasicDiscretizer.h"
 
 using namespace data;
