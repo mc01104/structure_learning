@@ -5,6 +5,7 @@
  *      Author: george
  */
 
+#include <iostream>
 #include <vector>
 
 #include "Score.h"
@@ -35,9 +36,16 @@ DecomposableScore::computeScore( Network& net, const data::Dataset& data)
 	{
 		SubGraph tmp(*it,net.getParents(*it));
 
-		score += this->computeSubGraphScore(net, data, tmp);
+		try
+		{
+			score += this->hash.at(tmp);
+		}
+		catch(::std::out_of_range& error)
+		{
+			score += this->computeSubGraphScore(net,data,tmp);
 
-		this->addSubGraphToHash(tmp, score);
+			this->addSubGraphToHash(tmp, score);
+		}
 	}
 
 	return score;
@@ -46,6 +54,7 @@ DecomposableScore::computeScore( Network& net, const data::Dataset& data)
 void
 DecomposableScore::addSubGraphToHash(SubGraph graph, double score)
 {
+	this->hash[graph] = score;
 }
 
 

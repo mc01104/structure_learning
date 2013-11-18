@@ -8,6 +8,8 @@
 #ifndef SCORE_H_
 #define SCORE_H_
 
+#include <map>
+
 #include "../NetworkDefs.h"
 #include "../Network.h"
 
@@ -65,6 +67,10 @@ class DecomposableScore : public Score
 		void addSubGraphToHash(SubGraph graph, double score);
 
 		virtual double computeSubGraphScore(Network& net, const data::Dataset& data, const SubGraph& subgraph) = 0;
+
+	protected:
+
+		::std::map < SubGraph, int> hash;
 };
 
 #endif /* SCORE_H_ */
